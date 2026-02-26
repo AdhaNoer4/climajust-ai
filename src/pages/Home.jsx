@@ -2,7 +2,7 @@ import Navbar from "../components/layout/Navbar";
 import HeroWeather from "../components/home/HeroWeather";
 import ImpactSidebar from "../components/home/ImpactSidebar";
 import RiskMap from "../components/home/RiskMap"
-import CityDetail from "../components/home/CityDetail"
+import CityDetailSidebar from "../components/home/CityDetailSidebar"
 import AIChat from "../components/home/AIChat"
 import Footer from "../components/layout/Footer"
 
@@ -24,7 +24,7 @@ export default function Home() {
           </div>
 
           <div className="lg:col-span-3">
-            <CityDetail />
+            <CityDetailSidebar />
           </div>
         </section>
 
