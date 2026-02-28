@@ -1,4 +1,6 @@
-export default function HeroWeather() {
+
+
+export default function HeroWeather({ city }) {
   return (
     <section className="
       relative overflow-hidden rounded-2xl
@@ -19,7 +21,7 @@ export default function HeroWeather() {
           </div>
 
           <h1 className="text-3xl font-bold">
-            Jebres, Surakarta
+            {city.name}
           </h1>
 
           <p className="text-sm opacity-90">
@@ -31,7 +33,7 @@ export default function HeroWeather() {
             transition hover:shadow-lg hover:-translate-y-1
           ">
             <div className="flex items-center gap-2 text-red-600 font-semibold">
-              ⚠️ RESIKO TINGGI
+              ⚠️ RISIKO {city.risk.toUpperCase()}
             </div>
 
             <p className="text-sm mt-1 leading-relaxed">
@@ -53,12 +55,12 @@ export default function HeroWeather() {
           <div className="text-6xl animate-bounce-slow">🌦️</div>
 
           <div className="text-right">
-            <div className="text-5xl font-bold">31°</div>
+            <div className="text-5xl font-bold">{city.temp}</div>
             <div className="text-sm opacity-90">31° / 28°</div>
 
             <div className="mt-2 text-xs space-y-1 opacity-90">
-              <div>💧 80%</div>
-              <div>🌬️ 19 km/h</div>
+              <div>💧 {city.humidity || 80}%</div>
+              <div>🌬️ {city.wind}</div>
             </div>
           </div>
         </div>

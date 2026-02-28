@@ -1,30 +1,21 @@
-export default function CityDetailSidebar() {
+export default function CityDetailSidebar({ city }) {
+  if (!city) {
+    return <aside className="bg-white rounded-2xl shadow p-4 text-sm text-slate-500">Pilih wilayah pada peta untuk melihat detail</aside>;
+  }
   return (
     <aside className="space-y-4">
       {/* Info Kota */}
       <section className="bg-white rounded-2xl shadow p-4 space-y-2">
-        <h3 className="font-semibold text-slate-800">Jebres, Surakarta</h3>
-        <p className="text-xs text-slate-500">Update terakhir: 26 Feb 2026 • 09:00 WIB</p>
-
-        <span className="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium">Risiko Tinggi</span>
+        <h3 className="font-semibold">{city.name}</h3>
+        <p className="text-sm text-slate-600">Jumlah Warga: {city.people}</p>
+        <p className="text-sm font-medium">Level Risiko: {city.risk}</p>
       </section>
 
       {/* Ringkasan Cuaca */}
       <section className="bg-white rounded-2xl shadow p-4 grid grid-cols-3 gap-3 text-center">
-        <WeatherMini label="Suhu" value="29°C" icon="🌡️" />
-        <WeatherMini label="Cuaca" value="Hujan" icon="🌧️" />
-        <WeatherMini label="Angin" value="18 km/j" icon="🌬️" />
-      </section>
-
-      {/* Dampak Sosial */}
-      <section className="bg-white rounded-2xl shadow p-4 space-y-2">
-        <h4 className="font-semibold text-sm text-slate-800">Dampak Potensial</h4>
-
-        <ul className="space-y-1.5 text-sm text-slate-700">
-          <li>🌾 Risiko gagal panen</li>
-          <li>🛵 Buruh harian kehilangan jam kerja</li>
-          <li>🏘️ Genangan di area bantaran sungai</li>
-        </ul>
+        <WeatherMini label="Suhu" value={city.temp} icon="🌡️" />
+        <WeatherMini label="Cuaca" value={city.weather} icon="🌧️" />
+        <WeatherMini label="Angin" value={city.wind} icon="🌬️" />
       </section>
 
       {/* Peringatan Cuaca Per Jam */}

@@ -1,6 +1,21 @@
 import { NavLink } from "react-router-dom";
+import { useState } from "react";
 
-export default function Navbar() {
+export default function Navbar({ onSelectCity }) {
+  const [input, setInput] = useState("");
+
+  function handleSearch() {
+    const value = input.toLowerCase();
+
+    if (value.includes("jebres")) {
+      onSelectCity("jebres");
+    }
+
+    if (value.includes("laweyan")) {
+      onSelectCity("laweyan");
+    }
+    setInput("");
+  }
   return (
     <header className="sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-3">
@@ -34,7 +49,12 @@ export default function Navbar() {
 
           {/* Right */}
           <div className="flex items-center gap-3">
-            <input placeholder="Cari lokasi" className="hidden md:block px-4 py-2 rounded-full bg-slate-100 text-sm focus:outline-none" />
+            <div className="flex items-center gap-3">
+              <input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Cari lokasi..." className="border px-3 py-2 rounded-lg text-sm" />
+              <button onClick={handleSearch} className="bg-sky-600 text-white px-4 py-2 rounded-lg text-sm">
+                Cari
+              </button>
+            </div>
             <button className="px-4 py-2 rounded-full bg-sky-600 text-white text-sm hover:bg-sky-700">Login</button>
           </div>
         </div>
