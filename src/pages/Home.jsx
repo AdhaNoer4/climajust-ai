@@ -17,7 +17,7 @@ const cityData = {
     temp: "29°C",
     weather: "Hujan Lebat",
     wind: "18 km/j",
-    humidity: "85%",
+    humidity: "85",
   },
   laweyan: {
     name: "Laweyan, Surakarta",
@@ -28,7 +28,7 @@ const cityData = {
     temp: "30°C",
     weather: "Berawan",
     wind: "12 km/j",
-    humidity: "70%",
+    humidity: "70",
   },
 };
 
