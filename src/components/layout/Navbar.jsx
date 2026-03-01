@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
+import { Search } from "lucide-react";
 
 export default function Navbar({ onSelectCity }) {
   const [input, setInput] = useState("");

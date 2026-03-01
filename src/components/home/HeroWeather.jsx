@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { CircleFadingPlus } from "lucide-react";
 
 export default function HeroWeather({ weatherData, cityName }) {
   // Format tanggal hari ini secara dinamis
@@ -37,12 +38,13 @@ export default function HeroWeather({ weatherData, cityName }) {
   }
 
   return (
-    <section className="
-      relative overflow-hidden rounded-2xl
+    <section
+      className=" pb-20"  
+    >
+      <main className="relative overflow-visible rounded-2xl 
       bg-gradient-to-br from-sky-400 via-sky-500 to-blue-600
-      text-white shadow-xl
-      transition-all duration-300 hover:scale-[1.01]
-    ">
+      text-white shadow-lg
+      transition-all duration-300 hover:scale-[1.01]">
       {/* Cloud effects */}
       <div className="absolute -top-20 -right-20 w-72 h-72 bg-white/20 rounded-full blur-3xl" />
       <div className="absolute bottom-0 left-10 w-96 h-32 bg-white/10 rounded-full blur-2xl" />
@@ -51,7 +53,8 @@ export default function HeroWeather({ weatherData, cityName }) {
         {/* LEFT */}
         <div className="space-y-4">
           <div className="text-sm opacity-90 flex items-center gap-2">
-            ☁️ Status Cuaca Hari Ini
+            <CircleFadingPlus size={20} />
+            Status Cuaca Hari Ini
           </div>
           <h1 className="text-3xl font-bold">{cityName}</h1>
           <p className="text-sm opacity-90">{today}</p>
@@ -94,6 +97,7 @@ export default function HeroWeather({ weatherData, cityName }) {
           </div>
         </div>
       </div>
+      </main>
     </section>
   );
 }
