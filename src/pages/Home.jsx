@@ -36,9 +36,6 @@ export default function Home() {
   const [selectedCity, setSelectedCity] = useState("jebres");
 
   const city = cityData[selectedCity];
-  console.log("selectedCity:", selectedCity);
-  console.log("cityData:", cityData);
-  console.log("result city:", cityData[selectedCity]);
   return (
     <div className="min-h-screen bg-sky-100">
       <Navbar onSelectCity={setSelectedCity} />
@@ -48,7 +45,7 @@ export default function Home() {
 
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           <div className="lg:col-span-3">
-            <ImpactSidebar />
+            <ImpactSidebar city={city} />
           </div>
 
           <div className="lg:col-span-6">

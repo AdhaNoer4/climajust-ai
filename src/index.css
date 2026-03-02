@@ -2,3 +2,40 @@
 body {
   overflow-x: hidden;
 }
+
+/* Cloud animation */
+@keyframes cloudMoveSlow {
+  from {
+    transform: translateX(-20%);
+  }
+  to {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes cloudMoveMedium {
+  from {
+    transform: translateX(-30%);
+  }
+  to {
+    transform: translateX(130%);
+  }
+}
+
+@keyframes cloudFloat {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-cloud-float {
+  animation: cloudFloat 6s ease-in-out infinite;
+}
+
+/* Utility classes */
+.animate-cloud-slow {
+  animation: cloudMoveSlow 30s linear infinite ;
+}
+
+.animate-cloud-medium {
+  animation: cloudMoveMedium 20s linear infinite;
+}
