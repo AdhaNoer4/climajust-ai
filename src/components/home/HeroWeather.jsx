@@ -67,7 +67,7 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
       bg-white text-slate-800
       rounded-xl p-5
       max-w-lg
-      shadow-2xl
+      shadow-sm
       transition hover:-translate-y-1 hover:shadow-3xl
           "
               >
