@@ -28,8 +28,7 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <main className="max-w-7xl mx-auto px-4 py-8">
+    
         <Routes>
           <Route
             path="/"
@@ -43,8 +42,7 @@ function App() {
           <Route path="/peta-risiko" element={<div>Peta Risiko</div>} />
           <Route path="/laporan" element={<div>Laporan</div>} />
         </Routes>
-      </main>
-    </div>
+      
   );
 }
 
