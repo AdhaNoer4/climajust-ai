@@ -2,40 +2,15 @@
 body {
   overflow-x: hidden;
 }
-
-/* Cloud animation */
-@keyframes cloudMoveSlow {
-  from {
-    transform: translateX(-20%);
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
   }
-  to {
-    transform: translateX(120%);
+  50% {
+    transform: translateY(-10px);
   }
 }
 
-@keyframes cloudMoveMedium {
-  from {
-    transform: translateX(-30%);
-  }
-  to {
-    transform: translateX(130%);
-  }
-}
-
-@keyframes cloudFloat {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-.animate-cloud-float {
-  animation: cloudFloat 6s ease-in-out infinite;
-}
-
-/* Utility classes */
-.animate-cloud-slow {
-  animation: cloudMoveSlow 30s linear infinite ;
-}
-
-.animate-cloud-medium {
-  animation: cloudMoveMedium 20s linear infinite;
+.animate-float {
+  animation: float 3s ease-in-out infinite;
 }
