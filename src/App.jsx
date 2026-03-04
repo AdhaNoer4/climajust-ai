@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import PetaRisiko from './pages/PetaRisiko';
 
 // Mapping nama kota ke kode ADM4
 const locationToAdm4 = {
@@ -39,7 +40,7 @@ function App() {
               />
             }
           />
-          <Route path="/peta-risiko" element={<div>Peta Risiko</div>} />
+          <Route path="/peta-risiko" element={<PetaRisiko />} />
           <Route path="/laporan" element={<div>Laporan</div>} />
         </Routes>
       
