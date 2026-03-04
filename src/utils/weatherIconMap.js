@@ -13,5 +13,14 @@ export const weatherIconMap = {
   "moderate rain": rain,
   "heavy rain": rain,
   "thunderstorm": thunder,
-    "mist": mist,
+  "mist": mist,
+
+  "cerah": clearDay,
+  "cerah berawan": partlyCloudy,
+  "berawan": cloudy,
+  "hujan ringan": rain,
+  "hujan sedang": rain,
+  "hujan lebat": rain,
+  "badai": thunder,
+  "kabut": mist,
 };

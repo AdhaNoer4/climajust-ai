@@ -1,4 +1,4 @@
-import { Bot } from "lucide-react";
+import { Bot, CircleCheckBig, Lightbulb } from "lucide-react";
 
 export default function RecommendationCard({ weatherData }) {
   const recommendations =
@@ -20,13 +20,13 @@ export default function RecommendationCard({ weatherData }) {
       <ul className="space-y-2 text-sm text-slate-700">
         {recommendations.map((item, index) => (
           <li key={index} className="flex items-center gap-2">
-            ✅ {item}
+            <CircleCheckBig size={16} className="text-green-500" /> {item}
           </li>
         ))}
       </ul>
 
       <div className="bg-sky-50 text-sky-700 text-xs rounded-lg p-2">
-        💡 Rekomendasi disesuaikan dengan kondisi cuaca & wilayah Anda
+        <Lightbulb size={14} className="inline mr-1 text-yellow-300" /> Rekomendasi disesuaikan dengan kondisi cuaca & wilayah Anda
       </div>
     </div>
   );
