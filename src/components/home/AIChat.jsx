@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Send, Smile } from "lucide-react";
+import { Send, Smile, Mic } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 
 export default function AIChat({ weatherData, cityName }) {
@@ -11,6 +11,11 @@ export default function AIChat({ weatherData, cityName }) {
   const [showEmoji, setShowEmoji] = useState(false);
   const bottomRef = useRef(null);
   const emojiRef = useRef(null);
+  const textareaRef = useRef(null);
+  const [listening, setListening] = useState(false);
+  const recognitionRef = useRef(null);
+
+  const suggestions = [`Apakah hari ini akan hujan di ${cityName}?`, `Berapa suhu maksimum hari ini di ${cityName}?`, `Apakah ada risiko cuaca ekstrem hari ini?`];
 
   useEffect(() => {
     if (!weatherData || !cityName) {
@@ -42,6 +47,9 @@ export default function AIChat({ weatherData, cityName }) {
     const userMessage = { role: "user", content: input };
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
     setLoading(true);
 
     try {
@@ -58,6 +66,7 @@ export default function AIChat({ weatherData, cityName }) {
 
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      speakText(data.reply);
       setHistory(data.history);
     } catch (err) {
       setMessages((prev) => [
@@ -87,11 +96,120 @@ export default function AIChat({ weatherData, cityName }) {
   }, []);
 
   function handleKeyDown(e) {
-    if (e.key === "Enter") handleSend();
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSend();
+    }
   }
 
   function handleEmojiClick(emojiData) {
     setInput((prev) => prev + emojiData.emoji);
+  }
+
+  function autoResize() {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    textarea.style.height = "auto";
+    textarea.style.height = textarea.scrollHeight + "px";
+  }
+
+  function handleSuggestionClick(text) {
+    setInput(text);
+
+    setTimeout(() => {
+      handleSend();
+    }, 100);
+  }
+
+  async function handleSendVoice(text) {
+    if (!text || loading || !weatherData) return;
+
+    const userMessage = { role: "user", content: text };
+
+    setMessages((prev) => [...prev, userMessage]);
+    setInput("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("http://localhost:5000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: text,
+          history,
+          cityName,
+          weatherData,
+        }),
+      });
+
+      const data = await res.json();
+
+      setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
+      speakText(data.reply);
+      setHistory(data.history);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: "Maaf, gagal menghubungi AI.",
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function startVoiceInput() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Browser tidak mendukung voice input");
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "id-ID";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognitionRef.current = recognition;
+
+    recognition.start();
+    setListening(true);
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript.trim();
+
+      setTimeout(() => {
+        handleSendVoice(transcript);
+      }, 200);
+    };
+
+    recognition.onend = () => {
+      setListening(false);
+    };
+  }
+
+  function stopVoiceInput() {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+      setListening(false);
+    }
+  }
+
+  function speakText(text) {
+    if (!window.speechSynthesis) return;
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.lang = "id-ID";
+    speech.rate = 1;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
   }
 
   return (
@@ -111,6 +229,35 @@ export default function AIChat({ weatherData, cityName }) {
         ))}
         {loading && <div className="p-2 rounded-lg max-w-[85%] bg-white text-slate-400 drop-shadow-sm animate-pulse">Sedang mengetik...</div>}
         <div ref={bottomRef} />
+
+        {messages.length === 1 && weatherData && (
+          <div className="mb-3">
+            <p className="text-xs text-slate-500 mb-2">Tanya AI:</p>
+
+            <div className="flex flex-wrap gap-2">
+              {suggestions.map((text, i) => (
+                <button
+                  key={i}
+                  onClick={() => handleSuggestionClick(text)}
+                  className="
+            text-xs
+            bg-sky-50
+            border
+            border-sky-200
+            text-sky-700
+            px-3
+            py-1.5
+            rounded-full
+            hover:bg-sky-100
+            transition
+          "
+                >
+                  {text}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="relative flex justify-center mt-3">
@@ -133,15 +280,31 @@ export default function AIChat({ weatherData, cityName }) {
           </button>
 
           {/* Input */}
-          <input
-            type="text"
+          <textarea
+            ref={textareaRef}
+            rows={1}
             value={input}
-            onChange={(e) => setInput(e.target.value)}
+            onChange={(e) => {
+              setInput(e.target.value);
+              autoResize();
+            }}
             onKeyDown={handleKeyDown}
             placeholder={weatherData ? "Tanyakan sesuatu..." : "Pilih wilayah dulu..."}
             disabled={!weatherData || loading}
-            className="flex-1 bg-transparent outline-none text-sm"
+            className="
+                  flex-1
+                  resize-none
+                  bg-transparent
+                  outline-none
+                  text-sm
+                  max-h-32
+                  leading-relaxed
+                "
           />
+          {/* Voice Input Button */}
+          <button onClick={listening ? stopVoiceInput : startVoiceInput} className={`p-2 rounded-full transition ${listening ? "bg-red-500 text-white animate-pulse" : "text-sky-600 hover:bg-slate-100"}`}>
+            <Mic size={18} />
+          </button>
 
           {/* Send Button */}
           <button onClick={handleSend} disabled={!weatherData || loading} className="bg-sky-600 text-white p-2 rounded-full hover:bg-sky-700 disabled:opacity-50">
