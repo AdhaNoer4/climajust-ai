@@ -1,6 +1,112 @@
 const express = require("express");
 const router = express.Router();
 
+// Fungsi untuk delay (sleep)
+const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Fungsi untuk menghapus markdown/asterisk
+function cleanMarkdown(text) {
+  if (!text) return text;
+  
+  // Hapus ** (bold)
+  text = text.replace(/\*\*(.*?)\*\*/g, '$1');
+  
+  // Hapus * (italic)
+  text = text.replace(/\*(.*?)\*/g, '$1');
+  
+  // Hapus __ (underline)
+  text = text.replace(/__(.*?)__/g, '$1');
+  
+  // Hapus ` (code)
+  text = text.replace(/`(.*?)`/g, '$1');
+  
+  // Hapus # (heading)
+  text = text.replace(/#{1,6}\s?(.*?)(\n|$)/g, '$1$2');
+  
+  // Hapus - di awal untuk list (opsional)
+  text = text.replace(/^\s*[-*+]\s+/gm, '');
+  
+  return text.trim();
+}
+
+// Fungsi untuk panggil Gemini dengan retry logic
+async function callGeminiWithRetry(prompt, apiKey, maxRetries = 3) {
+  // Daftar model yang bisa dicoba (urutan dari yang paling baru)
+  const models = [
+    "gemini-3-flash-preview",
+    "gemini-1.5-pro",
+    "gemini-1.5-flash",
+    "gemini-pro"
+  ];
+  
+  let lastError = null;
+  
+  // Coba setiap model
+  for (const model of models) {
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        console.log(`🔄 Mencoba model ${model} (percobaan ${attempt}/${maxRetries})...`);
+        
+        const response = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{ 
+                parts: [{ text: prompt }] 
+              }],
+              generationConfig: {
+                temperature: 0.7,
+                maxOutputTokens: 1024,
+              }
+            })
+          }
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          
+          // Kalau error 503 (high demand), tunggu sebentar lalu coba lagi
+          if (response.status === 503) {
+            console.log(`⚠️ Model ${model} kelebihan permintaan, tunggu ${attempt * 2} detik...`);
+            await delay(attempt * 2000); // Tunggu 2,4,6 detik
+            continue; // Coba lagi dengan model yang sama
+          }
+          
+          // Kalau error 404 (model tidak ditemukan), lanjut ke model berikutnya
+          if (response.status === 404) {
+            console.log(`❌ Model ${model} tidak ditemukan, coba model lain...`);
+            break; // Keluar dari loop retry, lanjut ke model berikutnya
+          }
+          
+          throw new Error(`HTTP ${response.status}: ${JSON.stringify(errorData)}`);
+        }
+
+        const data = await response.json();
+        console.log(`✅ Berhasil dengan model ${model}`);
+        return data;
+        
+      } catch (err) {
+        console.log(`❌ Error dengan model ${model} (percobaan ${attempt}):`, err.message);
+        lastError = err;
+        
+        // Kalau error 404, langsung coba model berikutnya
+        if (err.message?.includes("404")) {
+          break;
+        }
+        
+        // Tunggu sebelum retry
+        if (attempt < maxRetries) {
+          await delay(attempt * 1000);
+        }
+      }
+    }
+  }
+  
+  throw lastError || new Error("Semua model gagal");
+}
+
 router.post("/", async (req, res) => {
   try {
     const { message, history = [], cityName, weatherData } = req.body;
@@ -10,7 +116,7 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Buat prompt yang lebih terstruktur
+    // Buat prompt yang lebih terstruktur dengan instruksi untuk TIDAK pakai markdown
     let promptContent = `Kamu adalah Climate AI Assistant untuk aplikasi pemantauan iklim Indonesia.
 
 INFORMASI WILAYAH:
@@ -37,48 +143,23 @@ INSTRUKSI PENTING:
 3. Fokus menjawab pertanyaan tentang: cuaca, iklim, potensi banjir, dan aktivitas luar ruang
 4. Jawab dengan singkat, jelas, dan ramah dalam Bahasa Indonesia
 5. Jika ditanya di luar topik, tolak dengan sopan
+6. **JANGAN GUNAKAN MARKDOWN ATAU BINTANG** - Jangan gunakan ** untuk menebalkan teks
+7. Cukup tulis teks biasa saja tanpa formatting apapun
+8. Jangan gunakan * atau ** atau __ atau # atau - untuk list
 
-JAWABAN DALAM BAHASA INDONESIA:`;
+JAWABAN DALAM BAHASA INDONESIA (TANPA MARKDOWN/TANPA BINTANG):`;
 
-    console.log("Sending request to Gemini 3 Flash...");
+    console.log(`[${new Date().toLocaleTimeString()}] 📤 Sending request to Gemini...`);
 
-    // Gunakan fetch langsung ke API Gemini dengan model gemini-3-flash-preview
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${process.env.GEMINI_API_KEY}`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contents: [
-            {
-              parts: [
-                {
-                  text: promptContent,
-                },
-              ],
-            },
-          ],
-          generationConfig: {
-            temperature: 0.7,
-            maxOutputTokens: 1024,
-          },
-        }),
-      }
-    );
-
-    if (!response.ok) {
-      const errorData = await response.text();
-      console.error("Gemini API error response:", errorData);
-      throw new Error(`Gemini API returned ${response.status}: ${errorData}`);
-    }
-
-    const data = await response.json();
+    // Panggil Gemini dengan retry logic
+    const data = await callGeminiWithRetry(promptContent, process.env.GEMINI_API_KEY);
     
-    // Extract response text from Gemini
-    const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 
-                  "Maaf, tidak bisa mendapatkan respons dari AI.";
+    // Extract response text dari Gemini
+    let reply = data.candidates?.[0]?.content?.parts?.[0]?.text || 
+                "Maaf, tidak bisa mendapatkan respons dari AI.";
+    
+    // Bersihkan markdown kalau masih ada bintang
+    reply = cleanMarkdown(reply);
 
     // Update history
     const updatedHistory = [
@@ -93,19 +174,29 @@ JAWABAN DALAM BAHASA INDONESIA:`;
     });
 
   } catch (err) {
-    console.error("Gemini API error:", err);
+    console.error("❌ Gemini API error:", err);
     
     let errorMessage = "Gagal menghubungi AI. Silakan coba lagi.";
+    let replyMessage = "Maaf, layanan AI sedang sibuk. Silakan coba lagi nanti ya! ⏳";
     
     if (err.message?.includes("API key")) {
       errorMessage = "API Key tidak valid. Periksa konfigurasi.";
+      replyMessage = "Maaf, terjadi masalah dengan koneksi AI. Tim kami sedang memperbaikinya. 🙏";
     } else if (err.message?.includes("quota")) {
       errorMessage = "Kuota API habis. Coba lagi nanti.";
+      replyMessage = "Maaf, kuota percakapan hari ini habis. Silakan coba lagi besok! 📅";
+    } else if (err.message?.includes("503")) {
+      errorMessage = "Layanan AI sedang sibuk. Coba lagi nanti.";
+      replyMessage = "Maaf, AI sedang sibuk melayani banyak permintaan. Coba lagi dalam beberapa saat ya! ⏳";
     } else if (err.message?.includes("404")) {
       errorMessage = "Model AI tidak ditemukan. Pastikan model name benar.";
+      replyMessage = "Maaf, terjadi kesalahan teknis. Tim kami sedang memperbaikinya. 🔧";
     }
     
-    res.status(500).json({ error: errorMessage });
+    res.status(500).json({ 
+      error: errorMessage,
+      reply: replyMessage 
+    });
   }
 });
 

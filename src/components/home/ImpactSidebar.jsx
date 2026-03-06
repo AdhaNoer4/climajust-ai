@@ -10,7 +10,8 @@ export default function ImpactSidebar({ weatherData }) {
         </h3>
 
         <ImpactCard weatherData={weatherData} />
-        <RecommendationCard weatherData={weatherData} />
+        <RecommendationCard weatherData={weatherData}
+        userJob="nelayan" />
       </div>
     </aside>
   );
