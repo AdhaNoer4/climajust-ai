@@ -1,41 +1,67 @@
-import { Bot, CircleCheckBig, Lightbulb } from "lucide-react";
+import {
+  Bot, CircleCheckBig, Lightbulb,
+  Tractor,
+  Fish,
+  Car,
+  HardHat,
+  Store,
+  Bike,
+  Camera,
+} from "lucide-react";
 
 export default function RecommendationCard({ weatherData, userJob = "petani" }) {
-
+  const formatJob = (job) => {
+    return job.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+  };
+  const jobIcons = {
+    petani: <Tractor size={16} />,
+    nelayan: <Fish size={16} />,
+    pengemudi: <Car size={16} />,
+    pekerja_konstruksi: <HardHat size={16} />,
+    pedagang_kaki_lima: <Store size={16} />,
+    ojek_online: <Bike size={16} />,
+    fotografer_luar_ruang: <Camera size={16} />,
+  };
+  const riskColors = {
+    low: "bg-green-100 text-green-700",
+    medium: "bg-yellow-100 text-yellow-700",
+    high: "bg-red-100 text-red-700",
+  };
   const weather = weatherData?.weather;
 
   const jobRecommendations = {
+
     petani: {
       high: [
-        "Tunda aktivitas di lahan karena hujan lebat atau badai",
-        "Periksa saluran irigasi untuk mencegah banjir",
+        "Tunda aktivitas di lahan karena hujan lebat",
+        "Periksa sistem drainase lahan",
         "Amankan alat pertanian dari angin kencang",
       ],
       medium: [
-        "Perhatikan kondisi tanah sebelum menanam",
-        "Siapkan penutup tanaman jika hujan turun",
-        "Pantau cuaca sebelum melakukan penyemprotan",
+        "Pantau kondisi tanah sebelum menanam",
+        "Siapkan penutup tanaman",
+        "Perhatikan potensi hujan lokal",
       ],
       low: [
-        "Cuaca baik untuk aktivitas di lahan",
-        "Lakukan pemupukan atau perawatan tanaman",
-        "Periksa kondisi tanaman secara rutin",
+        "Cuaca baik untuk aktivitas pertanian",
+        "Lakukan pemupukan dan penyiraman",
+        "Periksa kondisi tanaman",
       ],
     },
 
     nelayan: {
       high: [
-        "Hindari melaut karena risiko gelombang tinggi",
+        "Hindari melaut karena potensi gelombang tinggi",
         "Amankan kapal di pelabuhan",
         "Pantau informasi cuaca laut",
       ],
       medium: [
         "Gunakan alat keselamatan saat melaut",
         "Batasi jarak pelayaran",
-        "Perhatikan arah angin dan arus laut",
+        "Perhatikan arah angin",
       ],
       low: [
-        "Kondisi laut relatif aman untuk melaut",
+        "Kondisi laut relatif aman",
         "Periksa peralatan sebelum berangkat",
         "Tetap pantau perubahan cuaca",
       ],
@@ -44,20 +70,57 @@ export default function RecommendationCard({ weatherData, userJob = "petani" }) 
     pengemudi: {
       high: [
         "Kurangi kecepatan kendaraan",
-        "Hindari jalan rawan banjir",
-        "Pastikan lampu dan wiper berfungsi",
+        "Hindari jalur rawan banjir",
+        "Pastikan lampu kendaraan menyala",
       ],
       medium: [
-        "Jaga jarak aman antar kendaraan",
-        "Perhatikan kondisi jalan licin",
+        "Jaga jarak aman",
+        "Perhatikan jalan licin",
         "Gunakan lampu saat hujan",
       ],
       low: [
         "Kondisi jalan relatif aman",
-        "Tetap waspada terhadap perubahan cuaca",
+        "Tetap waspada perubahan cuaca",
         "Periksa kendaraan sebelum perjalanan",
       ],
     },
+
+    pekerja_konstruksi: {
+      high: [
+        "Hentikan pekerjaan di ketinggian",
+        "Amankan alat berat",
+        "Periksa instalasi listrik proyek",
+      ],
+      medium: [
+        "Gunakan alat keselamatan tambahan",
+        "Waspadai permukaan licin",
+        "Pantau kondisi angin",
+      ],
+      low: [
+        "Cuaca mendukung pekerjaan luar ruangan",
+        "Lanjutkan aktivitas konstruksi",
+        "Periksa stabilitas peralatan",
+      ],
+    },
+
+    pedagang_kaki_lima: {
+      high: [
+        "Amankan tenda atau gerobak dari angin",
+        "Pertimbangkan menutup sementara",
+        "Lindungi barang dari air",
+      ],
+      medium: [
+        "Gunakan penutup tambahan",
+        "Pantau perubahan cuaca",
+        "Siapkan perlindungan barang",
+      ],
+      low: [
+        "Cuaca mendukung aktivitas jualan",
+        "Tetap pantau perubahan cuaca",
+        "Pastikan area jualan aman",
+      ],
+    },
+
   };
 
   const determineRisk = (weather) => {
@@ -97,7 +160,13 @@ export default function RecommendationCard({ weatherData, userJob = "petani" }) 
           Rekomendasi AI
         </div>
       </div>
-
+      <div className="flex items-center gap-2 text-sm text-slate-600">
+        {jobIcons[userJob] || <Bot size={16} />}
+        Pekerjaan: {formatJob(userJob)}
+      </div>
+      <div className={`text-xs px-2 py-1 rounded w-fit ${riskColors[risk]}`}>
+        Risiko Cuaca: {risk.toUpperCase()}
+      </div>
       <ul className="space-y-2 text-sm text-slate-700">
         {recommendations.map((item, index) => (
           <li key={index} className="flex items-center gap-2">
