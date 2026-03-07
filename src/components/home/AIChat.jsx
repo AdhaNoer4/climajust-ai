@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { Send, Smile, Mic } from "lucide-react";
+import { Send, Smile, Mic, Volume2, VolumeX } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 
 export default function AIChat({ weatherData, cityName }) {
@@ -14,6 +14,8 @@ export default function AIChat({ weatherData, cityName }) {
   const textareaRef = useRef(null);
   const [listening, setListening] = useState(false);
   const recognitionRef = useRef(null);
+  const [voiceEnabled, setVoiceEnabled] = useState(false);
+  const [speakingIndex, setSpeakingIndex] = useState(null);
 
   const suggestions = [`Apakah hari ini akan hujan di ${cityName}?`, `Berapa suhu maksimum hari ini di ${cityName}?`, `Apakah ada risiko cuaca ekstrem hari ini?`];
 
@@ -66,7 +68,7 @@ export default function AIChat({ weatherData, cityName }) {
 
       const data = await res.json();
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-      speakText(data.reply);
+
       setHistory(data.history);
     } catch (err) {
       setMessages((prev) => [
@@ -146,7 +148,7 @@ export default function AIChat({ weatherData, cityName }) {
       const data = await res.json();
 
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
-      speakText(data.reply);
+
       setHistory(data.history);
     } catch (err) {
       setMessages((prev) => [
@@ -201,6 +203,8 @@ export default function AIChat({ weatherData, cityName }) {
   }
 
   function speakText(text) {
+    if (!voiceEnabled) return;
+
     if (!window.speechSynthesis) return;
 
     const speech = new SpeechSynthesisUtterance(text);
@@ -208,6 +212,30 @@ export default function AIChat({ weatherData, cityName }) {
     speech.lang = "id-ID";
     speech.rate = 1;
     speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+  }
+
+  function speakMessage(text, index) {
+    if (!window.speechSynthesis) return;
+
+    if (speakingIndex === index) {
+      window.speechSynthesis.cancel();
+      setSpeakingIndex(null);
+      return;
+    }
+
+    window.speechSynthesis.cancel();
+
+    const speech = new SpeechSynthesisUtterance(text);
+
+    speech.lang = "id-ID";
+
+    speech.onend = () => {
+      setSpeakingIndex(null);
+    };
+
+    setSpeakingIndex(index);
 
     window.speechSynthesis.speak(speech);
   }
@@ -223,8 +251,14 @@ export default function AIChat({ weatherData, cityName }) {
 
       <div className=" flex-1 overflow-y-auto space-y-2 text-sm">
         {messages.map((msg, index) => (
-          <div key={index} className={` p-2 rounded-lg max-w-[85%] ${msg.role === "assistant" ? "bg-white text-slate-800 shadow-sm inset-shadow-2xs" : "bg-blue-400 ml-auto text-slate-100"}`}>
-            {msg.content}
+          <div key={index} className={`p-2 rounded-lg max-w-[85%] flex items-start gap-2 ${msg.role === "assistant" ? "bg-white text-slate-800 shadow-sm" : "bg-blue-400 ml-auto text-slate-100"}`}>
+            <span className="flex-1">{msg.content}</span>
+
+            {msg.role === "assistant" && (
+              <button onClick={() => speakMessage(msg.content, index)} className="text-sky-600 hover:text-sky-800 transition">
+                {speakingIndex === index ? <VolumeX size={16} /> : <Volume2 size={16} />}
+              </button>
+            )}
           </div>
         ))}
         {loading && <div className="p-2 rounded-lg max-w-[85%] bg-white text-slate-400 drop-shadow-sm animate-pulse">Sedang mengetik...</div>}
