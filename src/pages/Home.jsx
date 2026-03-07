@@ -48,9 +48,7 @@ const getFallbackPopulation = (adm4Code) => {
 const fetchPopulationData = async (adm4Code) => {
   try {
     console.log(`📡 Fetching BPS untuk kode: ${adm4Code}`);
-    const response = await fetch(
-      `http://localhost:5000/api/bps/penduduk/${adm4Code}?tahun=2023`
-    );
+    const response = await fetch(`http://localhost:5000/api/bps/penduduk/${adm4Code}?tahun=2023`);
 
     const data = await response.json();
     console.log("📦 Data BPS dari backend:", data); // <-- LIHAT INI DI CONSOLE BROWSER
@@ -85,9 +83,7 @@ export default function Home({ selectedLocation, onSearchLocation }) {
         setLoading(true);
 
         // Fetch data cuaca
-        const weatherResponse = await fetch(
-          `http://localhost:5000/api/weather/adm4/${selectedLocation.adm4Code}`
-        );
+        const weatherResponse = await fetch(`http://localhost:5000/api/weather/adm4/${selectedLocation.adm4Code}`);
         if (!weatherResponse.ok) throw new Error("Gagal mengambil data cuaca");
         const weather = await weatherResponse.json();
 
@@ -165,40 +161,27 @@ export default function Home({ selectedLocation, onSearchLocation }) {
     <div className="min-h-screen bg-sky-100">
       <Navbar onSelectCity={handleCitySelect} />
 
-      <main className="max-w-7xl mx-auto px-4 space-y-6">
-        <HeroWeather
-          weatherData={weatherData}
-          cityName={selectedLocation.cityName}
-        />
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 space-y-6">
+        <HeroWeather weatherData={weatherData} cityName={selectedLocation.cityName} />
 
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-3">
+          {/* Map (Mobile tampil pertama) */}
+          <div className="order-1 lg:order-2 lg:col-span-6">
+            <RiskMap center={[cityMetadata[selectedLocation.adm4Code]?.lat || -6.1647, cityMetadata[selectedLocation.adm4Code]?.lng || 106.8454]} weatherData={weatherData} metadata={enrichedMetadata} />
+          </div>
+
+          {/* Detail kota */}
+          <div className="order-2 lg:order-3 lg:col-span-3">
+            <CityDetailSidebar weatherData={weatherData} metadata={enrichedMetadata} />
+          </div>
+
+          {/* Dampak */}
+          <div className="order-3 lg:order-1 lg:col-span-3">
             <ImpactSidebar weatherData={weatherData} />
-          </div>
-
-          <div className="lg:col-span-6">
-            <RiskMap
-              center={[
-                cityMetadata[selectedLocation.adm4Code]?.lat || -6.1647,
-                cityMetadata[selectedLocation.adm4Code]?.lng || 106.8454,
-              ]}
-              weatherData={weatherData}
-              metadata={enrichedMetadata}
-            />
-          </div>
-
-          <div className="lg:col-span-3">
-            <CityDetailSidebar
-              weatherData={weatherData}
-              metadata={enrichedMetadata}
-            />
           </div>
         </section>
 
-        <AIChat
-          weatherData={weatherData}
-          cityName={selectedLocation.cityName}
-        />
+        <AIChat weatherData={weatherData} cityName={selectedLocation.cityName} />
       </main>
 
       <Footer />

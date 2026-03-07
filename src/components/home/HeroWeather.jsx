@@ -39,7 +39,7 @@ export default function HeroWeather({ weatherData, cityName }) {
   const isRain = weatherData.weather.description_en?.toLowerCase().includes("rain");
 
   return (
-    <section className=" pb-20">
+    <section className="pb-12 lg:pb-20">
       <main
         className={`relative overflow-visible rounded-2xl text-white shadow-xl 
       bg-gradient-to-br 
@@ -48,28 +48,28 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
       >
         {/* Cloud effects */}
 
-        <div className="relative p-6 md:p-8 pb-32 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="relative p-5 sm:p-6 lg:p-8 pb-14 lg:pb-16 grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* LEFT */}
           <div className="space-y-4">
             <div className="text-sm opacity-90 flex items-center gap-2">
               <CircleFadingPlus size={20} />
               Status Cuaca Hari Ini
             </div>
-            <h1 className="text-3xl font-bold">{cityName}</h1>
+            <h1 className="text-md lg:text-3xl font-bold">{cityName}</h1>
             <p className="text-sm opacity-90">{today}</p>
 
             <div className="relative mt-6">
               <div
                 className="
-            absolute
-      left-0
-      top-full
-      bg-white text-slate-800
-      rounded-xl p-5
-      max-w-lg
-      shadow-sm
-      transition hover:-translate-y-1 hover:shadow-3xl
-          "
+                  absolute
+                  left-0
+                  top-full
+                  bg-white text-slate-800
+                  rounded-xl p-4 sm:p-5
+                  max-w-full sm:max-w-md lg:max-w-lg
+                  shadow-sm
+                  transition hover:-translate-y-1 hover:shadow-3xl
+                            "
               >
                 <div className="flex items-center gap-2 text-red-600 font-semibold">
                   <TriangleAlert size={20} color="#ff3838" /> RISIKO {risk.toUpperCase()}
@@ -84,11 +84,11 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
           </div>
 
           {/* RIGHT - Menggunakan ikon dari BMKG */}
-          <div className="flex items-center justify-center md:justify-end md:pr-10 gap-6">
+          <div className="flex items-center justify-end float-end md:justify-end md:pr-10 gap-6">
             {/* Ikon dari BMKG */}
-            <WeatherIcon description={weatherData.weather.description_en} className="w-24 h-24 object-contain animate-float" />
+            <WeatherIcon description={weatherData.weather.description_en} className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 object-contain animate-float" />
             <div className="text-right">
-              <div className="text-5xl font-bold">{weatherData.weather.temp}</div>
+              <div className="text-4xl sm:text-5xl font-bold">{weatherData.weather.temp}</div>
               <div className="flex justify-end gap-3 text-sm opacity-90">
                 <span className="flex items-center gap-1">
                   <ArrowUp size={14} />
