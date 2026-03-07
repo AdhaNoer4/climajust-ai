@@ -11,6 +11,10 @@ export default function RiskStatsSidebar() {
         <p className="text-lg font-semibold">900,000</p>
         <p className="text-sm text-gray-500">Jumlah Warga</p>
       </div>
+      <div className="bg-white rounded-2xl p-6 shadow">
+        <p className="text-lg font-semibold">900,000</p>
+        <p className="text-sm text-gray-500">Jumlah Warga</p>
+      </div>
 
       <div className="bg-green-100 rounded-2xl p-4">
         <p className="text-sm font-medium text-green-700">Aman</p>
