@@ -4,8 +4,10 @@ import HeroWeather from "../components/home/HeroWeather";
 import ImpactSidebar from "../components/home/ImpactSidebar";
 import RiskMap from "../components/home/RiskMap";
 import CityDetailSidebar from "../components/home/CityDetailSidebar";
+import BgAwan  from "../components/BgAwan";
 import AIChat from "../components/home/AIChat";
 import Footer from "../components/layout/Footer";
+
 
 // Mapping nama kota ke kode ADM4
 const locationToAdm4 = {
@@ -133,7 +135,7 @@ export default function Home({ selectedLocation, onSearchLocation }) {
   // Loading state
   if (loading) {
     return (
-      <div className="min-h-screen bg-sky-100">
+      <div className="min-h-screen bg-gradient-to-b from-blue-500 to-sky-100">
         <Navbar onSelectCity={handleCitySelect} />
         <main className="max-w-7xl mx-auto px-4 space-y-6">
           <div className="animate-pulse space-y-6">
@@ -158,8 +160,9 @@ export default function Home({ selectedLocation, onSearchLocation }) {
   };
 
   return (
-    <div className="min-h-screen bg-sky-100">
+    <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100">
       <Navbar onSelectCity={handleCitySelect} />
+        <BgAwan />
 
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 space-y-6">
         <HeroWeather weatherData={weatherData} cityName={selectedLocation.cityName} />

@@ -70,7 +70,7 @@ useEffect(() => {
   const center = [metadata.lat, metadata.lng];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-100 to-blue-50 p-6 space-y-6">
+    <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 p-6 space-y-6">
       <Navbar onSelectCity={handleCitySelect} />
       <main className="max-w-7xl mx-auto px-4 space-y-6">
         <RiskFilterBar />
