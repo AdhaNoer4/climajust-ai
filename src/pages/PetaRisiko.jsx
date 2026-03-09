@@ -3,6 +3,7 @@ import RiskFilterBar from "../components/risk/RiskFilterBar";
 import RiskStatsSidebar from "../components/risk/RiskStatsSidebar";
 import RiskMapContainer from "../components/risk/RiskMapContainer";
 import RiskTable from "../components/risk/RiskTable";
+import BgAwan  from "../components/BgAwan";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 
@@ -71,6 +72,7 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 p-6 space-y-6">
+      <BgAwan className="w-md" />
       <Navbar onSelectCity={handleCitySelect} />
       <main className="max-w-7xl mx-auto px-4 space-y-6">
         <RiskFilterBar />

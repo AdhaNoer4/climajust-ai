@@ -2,7 +2,7 @@ import LaporanForm from "../components/laporan/LaporanForm";
 import LaporanTable from "../components/laporan/LaporanTable";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
-import { BgAwan } from "../components/BgAwan";
+import  BgAwan  from "../components/BgAwan";
 
 export default function Laporan() {
   return (

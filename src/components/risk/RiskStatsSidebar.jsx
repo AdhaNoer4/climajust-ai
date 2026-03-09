@@ -9,7 +9,7 @@ export default function RiskStatsSidebar({ weatherData }) {
   const population = weatherData?.population;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 z-10">
       <div className="bg-blue-600 text-white rounded-2xl p-6 shadow">
         <p className="text-4xl font-bold">58</p>
         <p className="text-sm">Wilayah Risiko Tinggi</p>

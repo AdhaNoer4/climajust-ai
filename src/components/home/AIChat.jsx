@@ -16,6 +16,7 @@ export default function AIChat({ weatherData, cityName }) {
   const recognitionRef = useRef(null);
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [speakingIndex, setSpeakingIndex] = useState(null);
+  const firstLoadRef = useRef(true);
 
   const suggestions = [`Apakah hari ini akan hujan di ${cityName}?`, `Berapa suhu maksimum hari ini di ${cityName}?`, `Apakah ada risiko cuaca ekstrem hari ini?`];
 
@@ -39,9 +40,14 @@ export default function AIChat({ weatherData, cityName }) {
     setHistory([]);
   }, [weatherData, cityName]);
 
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  //   useEffect(() => {
+  //   if (firstLoadRef.current) {
+  //     firstLoadRef.current = false;
+  //     return;
+  //   }
+
+  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   async function handleSend() {
     if (!input.trim() || loading || !weatherData) return;
@@ -81,6 +87,8 @@ export default function AIChat({ weatherData, cityName }) {
     } finally {
       setLoading(false);
     }
+
+   
   }
 
   useEffect(() => {
