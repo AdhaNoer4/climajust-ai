@@ -1,9 +1,9 @@
 require("dotenv").config();
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
+const db = require('./config/db'); // ✅ pakai require, bukan import
 const weatherRoutes = require('./routes/weather');
-const bpsRoutes = require('./routes/bps'); // Tambahkan ini
+const bpsRoutes = require('./routes/bps');
 const chatRouter = require("./routes/chat");
 
 const app = express();
@@ -15,13 +15,25 @@ app.use(express.json());
 
 // Routes
 app.use('/api/weather', weatherRoutes);
-app.use('/api/bps', bpsRoutes); // Tambahkan ini
+app.use('/api/bps', bpsRoutes);
 app.use("/api/chat", chatRouter);
+
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Weather API is running' });
 });
 
+// ✅ Contoh route users (opsional, hapus jika tidak perlu)
+app.get("/users", async (req, res) => {
+  try {
+    const [rows] = await db.query("SELECT * FROM users");
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ✅ listen hanya sekali
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
