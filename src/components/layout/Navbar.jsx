@@ -6,35 +6,46 @@ export default function Navbar({ onSelectCity }) {
   const [input, setInput] = useState("");
   const [searchError, setSearchError] = useState("");
 
-  function handleSearch() {
-    const value = input.toLowerCase().trim();
+  async function handleSearch() {
+  const value = input.trim();
+  if (!value) {
+    setSearchError("Masukkan nama lokasi");
+    return;
+  }
 
-    if (!value) {
-      setSearchError("Masukkan nama lokasi");
-      return;
-    }
+  try {
+    const res = await fetch(`http://localhost:5000/api/locations/search?q=${value}`);
+    const data = await res.json();
 
-    // Format nama kota sesuai dengan mapping
-    // Contoh: "jebres" -> "Jebres, Surakarta"
-    let formattedCity = "";
-
-    if (value.includes("jebres")) {
-      formattedCity = "Jebres, Surakarta";
-    } else if (value.includes("laweyan")) {
-      formattedCity = "Laweyan, Surakarta";
-    } else if (value.includes("kemayoran") || value.includes("jakarta")) {
-      formattedCity = "Kemayoran, Jakarta Pusat";
-    } else {
+    if (data.length === 0) {
       setSearchError(`Lokasi "${value}" tidak ditemukan`);
       return;
     }
 
-    // Panggil fungsi dari parent (Home)
-    onSelectCity(formattedCity);
+    // Ambil hasil pertama
+    onSelectCity(data[0].name);
     setSearchError("");
-    setInput(""); // Kosongkan input setelah search
+    setInput("");
+  } catch (err) {
+    setSearchError("Gagal mencari lokasi");
+  }
+}
+const [suggestions, setSuggestions] = useState([]);
+
+async function handleInputChange(e) {
+  const value = e.target.value;
+  setInput(value);
+  setSearchError("");
+
+  if (value.length < 2) {
+    setSuggestions([]);
+    return;
   }
 
+  const res = await fetch(`http://localhost:5000/api/locations/search?q=${value}`);
+  const data = await res.json();
+  setSuggestions(data);
+}
   
 
   return (
@@ -73,10 +84,7 @@ export default function Navbar({ onSelectCity }) {
             <div className="flex items-center gap-3 relative w-72">
               <input
                 value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                  setSearchError("");
-                }}
+            onChange={handleInputChange}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSearch();
                 }}
@@ -86,13 +94,33 @@ export default function Navbar({ onSelectCity }) {
               />
               {input && (
                 <button type="button"
-                  onClick={() => setInput("")}
+                  onClick={() => {
+  setInput("");
+  setSuggestions([]);
+}}
                   className="absolute right-8 top-1/2 -translate-y-1/2 
                    text-slate-500 hover:text-sky-600 transition"
                 >
                   ✕
                 </button>
               )}
+              {suggestions.length > 0 && (
+  <div className="absolute top-10 left-0 w-full bg-white rounded-xl shadow-lg z-50 overflow-hidden">
+    {suggestions.map(loc => (
+      <button
+        key={loc.adm4_code}
+        onClick={() => {
+          onSelectCity(loc.name);
+          setInput("");
+          setSuggestions([]);
+        }}
+        className="w-full text-left px-4 py-2 text-sm hover:bg-sky-50"
+      >
+        {loc.name}
+      </button>
+    ))}
+  </div>
+)}
               <button type="button"
                 onClick={handleSearch}
                 className="absolute right-2 top-1/2 -translate-y-1/2 
