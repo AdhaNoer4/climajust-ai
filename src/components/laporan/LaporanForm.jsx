@@ -1,13 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Upload, CheckCircle } from "lucide-react";
 
-const locationToAdm4 = {
-  "Kemayoran, Jakarta Pusat": "31.71.03.1001",
-  "Jebres, Surakarta": "33.72.04.1005",
-  "Laweyan, Surakarta": "33.72.01.1002",
-};
-
 export default function LaporanForm() {
+  const [locations, setLocations] = useState([]);
   const [form, setForm] = useState({
     judul: "",
     address: "",
@@ -21,15 +16,22 @@ export default function LaporanForm() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    fetch("http://localhost:5000/api/locations")
+      .then(res => res.json())
+      .then(data => setLocations(data))
+      .catch(() => setError("Gagal memuat data wilayah"));
+  }, []);
+
   function handleChange(e) {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...prev, [name]: value }));
   }
 
   function handleWilayah(e) {
-    const address = e.target.value;
-    const adm4Code = locationToAdm4[address] || "";
-    setForm((prev) => ({ ...prev, address, adm4Code }));
+    const adm4Code = e.target.value;
+    const selected = locations.find(l => l.adm4_code === adm4Code);
+    setForm(prev => ({ ...prev, address: selected?.name || "", adm4Code }));
   }
 
   function handlePhoto(e) {
@@ -39,21 +41,18 @@ export default function LaporanForm() {
       setError("Ukuran foto maksimal 5MB");
       return;
     }
-    setForm((prev) => ({ ...prev, photo: file }));
+    setForm(prev => ({ ...prev, photo: file }));
     setPreview(URL.createObjectURL(file));
     setError("");
   }
 
   async function handleSubmit() {
-    // Validasi
-    if (!form.judul || !form.address || !form.deskripsi || !form.riskLevel) {
+    if (!form.judul || !form.adm4Code || !form.deskripsi || !form.riskLevel) {
       setError("Semua field wajib diisi");
       return;
     }
-
     setLoading(true);
     setError("");
-
     try {
       const formData = new FormData();
       formData.append("judul", form.judul);
@@ -73,7 +72,6 @@ export default function LaporanForm() {
       setSuccess(true);
       setForm({ judul: "", address: "", adm4Code: "", deskripsi: "", riskLevel: "", photo: null });
       setPreview(null);
-
     } catch (err) {
       setError("Gagal mengirim laporan. Coba lagi.");
     } finally {
@@ -81,6 +79,7 @@ export default function LaporanForm() {
     }
   }
 
+  // ✅ if success dan return ada di DALAM fungsi komponen
   if (success) {
     return (
       <div className="bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-md flex flex-col items-center justify-center gap-4 min-h-[400px]">
@@ -122,14 +121,14 @@ export default function LaporanForm() {
           <div>
             <label className="block mb-2 font-medium">Wilayah</label>
             <select
-              name="address"
-              value={form.address}
+              name="adm4Code"
+              value={form.adm4Code}
               onChange={handleWilayah}
               className="w-full border rounded-lg px-4 py-3 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400"
             >
               <option value="">Pilih Wilayah</option>
-              {Object.keys(locationToAdm4).map((loc) => (
-                <option key={loc} value={loc}>{loc}</option>
+              {locations.map(loc => (
+                <option key={loc.adm4_code} value={loc.adm4_code}>{loc.name}</option>
               ))}
             </select>
           </div>
@@ -210,4 +209,4 @@ export default function LaporanForm() {
       </div>
     </div>
   );
-}
+} // ✅ kurung tutup komponen di sini

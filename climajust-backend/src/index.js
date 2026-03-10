@@ -5,6 +5,7 @@ const db = require('./config/db'); // ✅ pakai require, bukan import
 const weatherRoutes = require('./routes/weather');
 const bpsRoutes = require('./routes/bps');
 const chatRouter = require("./routes/chat");
+const locationsRoutes = require('./routes/locations'); // tambahkan ini
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -17,7 +18,7 @@ app.use(express.json());
 app.use('/api/weather', weatherRoutes);
 app.use('/api/bps', bpsRoutes);
 app.use("/api/chat", chatRouter);
-
+app.use('/api/locations', locationsRoutes); // tambahkan ini
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', message: 'Weather API is running' });
