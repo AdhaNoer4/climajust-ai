@@ -1,9 +1,9 @@
 export default function RiskBadge({ level }) {
 
   const colors = {
-    rendah: "bg-green-100 text-green-700",
-    sedang: "bg-orange-100 text-orange-700",
-    tinggi: "bg-red-100 text-red-700",
+    low: "bg-green-100 text-green-700",
+    medium: "bg-orange-100 text-orange-700",
+    high: "bg-red-100 text-red-700",
   };
 
   return (
