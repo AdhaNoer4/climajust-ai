@@ -1,50 +1,55 @@
-import { useState } from 'react';
-import { Routes, Route } from 'react-router-dom';
-import Home from './pages/Home';
-import PetaRisiko from './pages/PetaRisiko';
-import Laporan from './pages/Laporan';
-
-// Mapping nama kota ke kode ADM4
-const locationToAdm4 = {
-  "Kemayoran, Jakarta Pusat": "31.71.03.1001",
-  "Jebres, Surakarta": "33.72.04.1005",
-  "Laweyan, Surakarta": "33.72.01.1002",
-  // Tambahkan mapping kota lain di sini
-};
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import Home from "./pages/Home";
+import PetaRisiko from "./pages/PetaRisiko";
+import Laporan from "./pages/Laporan";
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState({
-    adm4Code: "31.71.03.1001",
-    cityName: "Kemayoran, Jakarta Pusat",
+    adm4Code: "33.72.04.1010",
+    cityName: "Jebres, Surakarta",
+    lat: -7.5586,
+    lng: 110.8216,
   });
 
   const handleSearchLocation = (locationData) => {
     setSelectedLocation({
       adm4Code: locationData.adm4Code,
       cityName: locationData.cityName,
+      lat: locationData.lat,
+      lng: locationData.lng,
     });
 
-    document.getElementById('hero-weather')?.scrollIntoView({
-      behavior: 'smooth',
+    // Optional: scroll hanya relevan di Beranda
+    document.getElementById("hero-weather")?.scrollIntoView({
+      behavior: "smooth",
     });
   };
 
   return (
-    
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <Home 
-                selectedLocation={selectedLocation}
-                onSearchLocation={handleSearchLocation}  // Kirim fungsi ke Home
-              />
-            }
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <Home
+            selectedLocation={selectedLocation}
+            onSearchLocation={handleSearchLocation}
           />
-          <Route path="/peta-risiko" element={<PetaRisiko />} />
-          <Route path="/laporan" element={<Laporan />} />
-        </Routes>
-      
+        }
+      />
+
+      <Route
+        path="/peta-risiko"
+        element={
+          <PetaRisiko
+            selectedLocation={selectedLocation}
+            onSearchLocation={handleSearchLocation}
+          />
+        }
+      />
+
+      <Route path="/laporan" element={<Laporan />} />
+    </Routes>
   );
 }
 

@@ -91,16 +91,19 @@ router.get("/", async (req, res) => {
 router.get("/validated", async (req, res) => {
   try {
     const [rows] = await db.query(
-      `SELECT adm4_code, address, risk_level, COUNT(*) AS jumlah_laporan
-       FROM laporan
-       WHERE status = 'valid'
-       AND created_at >= NOW() - INTERVAL 24 HOUR
-       GROUP BY adm4_code, risk_level
-       ORDER BY jumlah_laporan DESC`
-    );
+  `SELECT adm4_code, address, risk_level, 
+          COUNT(*) AS jumlah_laporan,
+          MAX(created_at) AS terakhir_laporan
+   FROM laporan
+   WHERE status = 'valid'
+   AND created_at >= UTC_TIMESTAMP() - INTERVAL 24 HOUR
+   GROUP BY adm4_code, address, risk_level
+   ORDER BY jumlah_laporan DESC`
+);
     res.json(rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
+
 module.exports = router;

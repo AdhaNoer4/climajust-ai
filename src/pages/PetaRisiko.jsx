@@ -1,74 +1,93 @@
+// components/pages/PetaRisiko.jsx
 import { useState, useEffect } from "react";
 import RiskFilterBar from "../components/risk/RiskFilterBar";
 import RiskStatsSidebar from "../components/risk/RiskStatsSidebar";
 import RiskMapContainer from "../components/risk/RiskMapContainer";
 import RiskTable from "../components/risk/RiskTable";
-import BgAwan  from "../components/BgAwan";
+import BgAwan from "../components/BgAwan";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
+import { useLocationSearch } from "../hooks/useLocationSearch";
 
-const locationToAdm4 = {
-  "Kemayoran, Jakarta Pusat": "31.71.03.1001",
-  "Jebres, Surakarta": "33.72.04.1005",
-  "Laweyan, Surakarta": "33.72.01.1002",
+// ✅ Sama persis dengan di Home.jsx
+const fetchPopulationData = async (adm4Code, cityName) => {
+  try {
+    const response = await fetch(`http://localhost:5000/api/bps/penduduk/${adm4Code}?tahun=2023`);
+    const data = await response.json();
+    if (!response.ok || !data.total || data.total === 0) {
+      throw new Error("Data tidak tersedia");
+    }
+    return {
+      total: data.total,
+      tahun: data.tahun || 2023,
+      satuan: data.satuan || "Jiwa",
+      sumber: data.sumber || "BPS",
+      label: data.label || "Jumlah Penduduk",
+    };
+  } catch (error) {
+    const fallback = {
+      "33.72.04.1010": { total: 180000 },
+      "33.72.01": { total: 95000 },
+      "33.72.02": { total: 60000 },
+      "33.72.03": { total: 75000 },
+      "33.72.05": { total: 160000 },
+    };
+    const pop = fallback[adm4Code];
+    return {
+      total: pop?.total || 0,
+      tahun: 2023,
+      sumber: "Estimasi (Data BPS tidak tersedia)",
+      satuan: "Jiwa",
+      label: `Jumlah Penduduk ${cityName}`,
+    };
+  }
 };
 
-const cityMetadata = {
-  "31.71.03.1001": { name: "Kemayoran, Jakarta Pusat", lat: -6.1647, lng: 106.8454 },
-  "33.72.04.1005": { name: "Jebres, Surakarta", lat: -7.5586, lng: 110.8216 },
-  "33.72.01.1002": { name: "Laweyan, Surakarta", lat: -7.5662, lng: 110.8165 },
-};
-
-const DEFAULT_ADM4 = "33.72.04.1005"; // default: Jebres, Surakarta
-
-export default function PetaRisiko() {
-  const [selectedAdm4, setSelectedAdm4] = useState(DEFAULT_ADM4);
+export default function PetaRisiko({ selectedLocation, onSearchLocation }) {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
-  
 
-useEffect(() => {
-  const fetchData = async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const res = await fetch(`http://localhost:5000/api/weather/adm4/${selectedLocation.adm4Code}`);
+        if (!res.ok) throw new Error("Gagal fetch cuaca");
+        const weather = await res.json();
 
-      const res = await fetch(`http://localhost:5000/api/weather/adm4/${selectedAdm4}`);
-      if (!res.ok) throw new Error("Gagal fetch cuaca");
-      const weather = await res.json();
+        // ✅ Pakai fetchPopulationData dengan fallback
+        const population = await fetchPopulationData(
+          selectedLocation.adm4Code,
+          selectedLocation.cityName
+        );
 
-      const popRes = await fetch(`http://localhost:5000/api/bps/penduduk/${selectedAdm4}?tahun=2023`);
-      const popData = await popRes.json();
+        setWeatherData({ ...weather, population });
+      } catch (err) {
+        console.error(err);
+        setWeatherData(null);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [selectedLocation.adm4Code]);
 
-      // ✅ Digabung dalam satu setWeatherData
-      setWeatherData({
-        ...weather,
-        ...cityMetadata[selectedAdm4],
-        population: {
-          total: popData.total || 0,
-          tahun: popData.tahun || 2023,
-          satuan: popData.satuan || "Jiwa",
-          sumber: popData.sumber || "BPS",
-          label: popData.label || "",
-        }
-      });
+  const handleCitySelect = useLocationSearch(
+    (loc) => setSelectedLocation({
+      adm4Code: loc.adm4_code,
+      cityName: loc.name,
+      lat: loc.lat,
+      lng: loc.lng,
+    }),
+    (cityName) => console.warn(`Lokasi "${cityName}" tidak ditemukan`)
+  );
 
-    } catch (err) {
-      console.error(err);
-      setWeatherData(null);
-    } finally {
-      setLoading(false);
-    }
+  const center = [selectedLocation.lat, selectedLocation.lng];
+  const metadata = {
+    name: selectedLocation.cityName,
+    lat: selectedLocation.lat,
+    lng: selectedLocation.lng,
   };
-  fetchData();
-}, [selectedAdm4]);
-
-  const handleCitySelect = (cityName) => {
-    const adm4 = locationToAdm4[cityName];
-    if (adm4) setSelectedAdm4(adm4);
-  };
-
-  const metadata = cityMetadata[selectedAdm4];
-  const center = [metadata.lat, metadata.lng];
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 p-6 space-y-6">
