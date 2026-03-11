@@ -29,7 +29,7 @@ useEffect(() => {
       <h3 className="text-lg font-semibold mb-4">Daftar Wilayah Risiko Tervalidasi</h3>
       <table className="w-full text-sm">
         <thead>
-          <tr className="bg-blue-100 text-left">
+          <tr className="bg-blue-100 text-left ">
             <th className="p-3">Wilayah</th>
             <th className="p-3">Jumlah Laporan</th>
             <th className="p-3">Level Risiko</th>

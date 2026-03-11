@@ -89,16 +89,26 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation }) {
     lng: selectedLocation.lng,
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 p-6 space-y-6">
-      <BgAwan className="w-md" />
+ return (
+  <div className="relative min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 overflow-hidden">
+
+    {/* Background Awan */}
+    <div className="absolute inset-0 z-0 pointer-events-none">
+      <BgAwan />
+    </div>
+
+    {/* Konten */}
+    <div className="relative z-10 space-y-6">
       <Navbar onSelectCity={handleCitySelect} />
+
       <main className="max-w-7xl mx-auto px-4 space-y-6">
-        <RiskFilterBar />
+        <RiskFilterBar weatherData={weatherData} metadata={metadata} />
+
         <div className="grid grid-cols-12 gap-6">
           <div className="col-span-3">
             <RiskStatsSidebar weatherData={weatherData} />
           </div>
+
           <div className="col-span-9">
             {loading ? (
               <div className="h-[500px] rounded-2xl bg-white/50 animate-pulse" />
@@ -111,9 +121,13 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation }) {
             )}
           </div>
         </div>
+
         <RiskTable />
       </main>
+
       <Footer />
     </div>
-  );
+
+  </div>
+);
 }
