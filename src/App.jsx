@@ -3,6 +3,9 @@ import { Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import PetaRisiko from './pages/PetaRisiko';
 import Laporan from './pages/Laporan';
+import Login from './pages/login';
+import Register from './pages/register';
+
 
 // Mapping nama kota ke kode ADM4
 const locationToAdm4 = {
@@ -43,6 +46,8 @@ function App() {
           />
           <Route path="/peta-risiko" element={<PetaRisiko />} />
           <Route path="/laporan" element={<Laporan />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       
   );
