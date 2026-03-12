@@ -17,10 +17,20 @@ export default function RiskStatsSidebar({ weatherData }) {
 
       {/* Jumlah Warga — dari BPS */}
       <div className="bg-blue-400 rounded-2xl p-6 shadow">
-        <p className="text-lg font-bold text-slate-100">
-          <Users size={30} className="inline mr-1" /> {population ? `${formatNumber(population.total)} ${population.satuan || "Jiwa"}` : "900,000"}
-          <p className="text-md font-medium text-slate-100 mb-1">Jumlah Warga</p>
-        </p>
+        <div className="text-slate-100">
+          <div className="flex items-center gap-2">
+            <Users size={30} />
+            <p className="text-lg font-bold">
+              {population
+                ? `${formatNumber(population.total)} ${population.satuan || "Jiwa"}`
+                : "900,000"}
+            </p>
+          </div>
+
+          <p className="text-md font-medium text-slate-100 mb-1">
+            Jumlah Warga
+          </p>
+        </div>
         {population && (
           <p className="text-xs text-blue-600 flex items-center gap-1 mt-1">
             <ChartColumnBig size={14} />
@@ -40,15 +50,15 @@ export default function RiskStatsSidebar({ weatherData }) {
 
       <div className="block-flex items-center gap-4 bg-white p-3 rounded-2xl shadow">
         <div className="p-2 inline-flex items-center gap-2">
-          <MapPin className="text-green-700" /> 
+          <MapPin className="text-green-700" />
           <p className="text-sm font-medium text-green-700">Aman</p>
         </div>
         <div className="p-2 inline-flex items-center gap-2">
-          <MapPin className="text-yellow-700" /> 
+          <MapPin className="text-yellow-700" />
           <p className="text-sm font-medium text-yellow-700">Siaga</p>
         </div>
         <div className=" p-2 inline-flex items-center gap-2">
-          <MapPin className="text-red-700" />  
+          <MapPin className="text-red-700" />
           <p className="text-sm font-medium text-red-700">Bahaya</p>
         </div>
       </div>

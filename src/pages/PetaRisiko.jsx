@@ -10,36 +10,38 @@ import { useLocationSearch } from "../hooks/useLocationSearch";
 
 // ✅ Sama persis dengan di Home.jsx
 const fetchPopulationData = async (adm4Code, cityName) => {
+  // 1. Coba dari BPS dulu
   try {
     const response = await fetch(`http://localhost:5000/api/bps/penduduk/${adm4Code}?tahun=2023`);
     const data = await response.json();
-    if (!response.ok || !data.total || data.total === 0) {
-      throw new Error("Data tidak tersedia");
+    if (response.ok && data.total && data.total > 0) {
+      return {
+        total: data.total,
+        tahun: data.tahun || 2023,
+        satuan: data.satuan || "Jiwa",
+        sumber: data.sumber || "BPS",
+        label: data.label || "Jumlah Penduduk",
+      };
     }
-    return {
-      total: data.total,
-      tahun: data.tahun || 2023,
-      satuan: data.satuan || "Jiwa",
-      sumber: data.sumber || "BPS",
-      label: data.label || "Jumlah Penduduk",
-    };
-  } catch (error) {
-    const fallback = {
-      "33.72.04.1010": { total: 180000 },
-      "33.72.01": { total: 95000 },
-      "33.72.02": { total: 60000 },
-      "33.72.03": { total: 75000 },
-      "33.72.05": { total: 160000 },
-    };
-    const pop = fallback[adm4Code];
-    return {
-      total: pop?.total || 0,
-      tahun: 2023,
-      sumber: "Estimasi (Data BPS tidak tersedia)",
-      satuan: "Jiwa",
-      label: `Jumlah Penduduk ${cityName}`,
-    };
-  }
+  } catch (_) {}
+
+  // 2. Fallback ke DB
+  try {
+    const response = await fetch(`http://localhost:5000/api/locations/${adm4Code}/populasi`);
+    const data = await response.json();
+    if (response.ok && data.total && data.total > 0) {
+      return data;
+    }
+  } catch (_) {}
+
+  // 3. Tidak ada data sama sekali
+  return {
+    total: 0,
+    tahun: 2023,
+    satuan: "Jiwa",
+    sumber: "Data tidak tersedia",
+    label: `Jumlah Penduduk ${cityName}`,
+  };
 };
 
 export default function PetaRisiko({ selectedLocation, onSearchLocation, user, onLoginSuccess, onLogout }) {
@@ -71,16 +73,18 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation, user, o
     fetchData();
   }, [selectedLocation.adm4Code]);
 
-  const handleCitySelect = useLocationSearch(
-    (loc) => setSelectedLocation({
-      adm4Code: loc.adm4_code,
-      cityName: loc.name,
-      lat: loc.lat,
-      lng: loc.lng,
-    }),
-    (cityName) => console.warn(`Lokasi "${cityName}" tidak ditemukan`)
-  );
-
+ const handleCitySelect = useLocationSearch(
+  (loc) => onSearchLocation({
+    adm4Code: loc.adm4_code,
+    cityName: loc.name,
+    lat: loc.lat,
+    lng: loc.lng,
+  }),
+  (query) => {
+    const name = typeof query === "string" ? query : query?.name;
+    console.warn(`Lokasi "${name}" tidak ditemukan`);
+  }
+);
   const center = [selectedLocation.lat, selectedLocation.lng];
   const metadata = {
     name: selectedLocation.cityName,
