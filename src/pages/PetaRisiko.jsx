@@ -1,4 +1,3 @@
-// components/pages/PetaRisiko.jsx
 import { useState, useEffect } from "react";
 import RiskFilterBar from "../components/risk/RiskFilterBar";
 import RiskStatsSidebar from "../components/risk/RiskStatsSidebar";
@@ -43,7 +42,7 @@ const fetchPopulationData = async (adm4Code, cityName) => {
   }
 };
 
-export default function PetaRisiko({ selectedLocation, onSearchLocation }) {
+export default function PetaRisiko({ selectedLocation, onSearchLocation, user, onLoginSuccess, onLogout }) {
   const [weatherData, setWeatherData] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -99,7 +98,12 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation }) {
 
     {/* Konten */}
     <div className="relative z-10 space-y-6">
-      <Navbar onSelectCity={handleCitySelect} />
+      <Navbar
+      onSelectCity={handleCitySelect}
+      user={user}
+      onLoginSuccess={onLoginSuccess}
+      onLogout={onLogout}
+    />
 
       <main className="max-w-7xl mx-auto px-4 space-y-6">
         <RiskFilterBar weatherData={weatherData} metadata={metadata} />

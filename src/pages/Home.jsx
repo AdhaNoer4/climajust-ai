@@ -42,7 +42,7 @@ const fetchPopulationData = async (adm4Code, cityName) => {
   }
 };
 
-export default function Home({ selectedLocation, onSearchLocation }) {
+export default function Home({ selectedLocation, onSearchLocation, user, onLoginSuccess, onLogout }) {
   const [weatherData, setWeatherData] = useState(null);
   const [populationData, setPopulationData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -97,7 +97,12 @@ export default function Home({ selectedLocation, onSearchLocation }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-500 to-sky-100">
-        <Navbar onSelectCity={handleCitySelect} />
+       <Navbar
+      onSelectCity={handleCitySelect}
+      user={user}
+      onLoginSuccess={onLoginSuccess}
+      onLogout={onLogout}
+    />
         <main className="max-w-7xl mx-auto px-4 space-y-6">
           <div className="animate-pulse space-y-6">
             <div className="h-64 bg-white/50 rounded-2xl" />
@@ -124,7 +129,12 @@ export default function Home({ selectedLocation, onSearchLocation }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100">
-      <Navbar onSelectCity={handleCitySelect} />
+         <Navbar
+      onSelectCity={handleCitySelect}
+      user={user}
+      onLoginSuccess={onLoginSuccess}
+      onLogout={onLogout}
+    />
       <BgAwan />
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 space-y-6">
         <HeroWeather weatherData={weatherData} cityName={selectedLocation.cityName} />
