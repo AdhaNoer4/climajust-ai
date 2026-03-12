@@ -67,7 +67,7 @@ export default function RiskMapContainer({ center, weatherData, metadata, userJo
   return (
     <div className="bg-white rounded-2xl shadow overflow-hidden">
       {/* Map */}
-      <div className="relative">
+      <div className="relative z-0">
         <MapContainer
           center={center}
           zoom={11}

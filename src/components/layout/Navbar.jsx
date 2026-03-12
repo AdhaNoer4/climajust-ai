@@ -1,10 +1,14 @@
 import { NavLink } from "react-router-dom";
 import { useState } from "react";
+import LoginModal from "../../auth/LoginModal";
+import RegisterModal from "../../auth/RegisterModal";
 import { Search } from "lucide-react";
 
 export default function Navbar({ onSelectCity }) {
   const [input, setInput] = useState("");
   const [searchError, setSearchError] = useState("");
+  const [showLogin, setShowLogin] = useState(false);
+  const [showRegister, setShowRegister] = useState(false);
 
   async function handleSearch() {
     const value = input.trim();
@@ -132,12 +136,21 @@ export default function Navbar({ onSelectCity }) {
 
               {searchError && <div className="absolute -bottom-6 left-0 text-xs text-red-500">{searchError}</div>}
             </div>
-            <NavLink to="/login" className="px-4 py-2 rounded-full bg-sky-600 text-white text-sm hover:bg-sky-700">
+            <button onClick={() => setShowLogin(true)} className="px-4 py-2 rounded-full bg-sky-600 text-white text-sm hover:bg-sky-700">
               Login
-            </NavLink>
+            </button>
           </div>
         </div>
       </div>
+      <LoginModal
+        isOpen={showLogin}
+        onClose={() => setShowLogin(false)}
+        openRegister={() => {
+          setShowLogin(false);
+          setShowRegister(true);
+        }}
+      />
+      <RegisterModal isOpen={showRegister} onClose={() => setShowRegister(false)} openLogin={() => setShowLogin(true)} />
     </header>
   );
 }
