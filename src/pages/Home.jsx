@@ -153,7 +153,7 @@ export default function Home({ selectedLocation, onSearchLocation, user, onLogin
             <CityDetailSidebar weatherData={weatherData} metadata={enrichedMetadata} />
           </div>
           <div className="order-3 lg:order-1 lg:col-span-3">
-            <ImpactSidebar weatherData={weatherData} />
+        <ImpactSidebar weatherData={weatherData} user={user} />
           </div>
         </section>
         <AIChat weatherData={weatherData} cityName={selectedLocation.cityName} />
