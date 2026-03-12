@@ -28,28 +28,6 @@ const upload = multer({
   },
 });
 
-// POST /api/laporan
-router.post("/", upload.single("photo"), async (req, res) => {
-  try {
-    const { judul, address, adm4Code, deskripsi, riskLevel } = req.body;
-    const photoUrl = req.file ? `/uploads/${req.file.filename}` : null;
-
-    if (!judul || !adm4Code || !deskripsi || !riskLevel) {
-      return res.status(400).json({ error: "Semua field wajib diisi" });
-    }
-
-    await db.query(
-      "INSERT INTO laporan (judul, adm4_code, address, deskripsi, risk_level, photo_url) VALUES (?, ?, ?, ?, ?, ?)",
-      [judul, adm4Code, address, deskripsi, riskLevel, photoUrl]
-    );
-   // ✅ Cek apakah perlu auto-validasi
-    await checkAndValidate(adm4Code, riskLevel);
-    res.status(201).json({ message: "Laporan berhasil dikirim" });
-  } catch (err) {
-    console.error("❌ Error laporan:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
 async function checkAndValidate(adm4Code, riskLevel) {
   const [rows] = await db.query(
     `SELECT COUNT(*) AS total FROM laporan 
@@ -74,7 +52,6 @@ async function checkAndValidate(adm4Code, riskLevel) {
     console.log(`✅ Auto-validasi: ${adm4Code} risiko ${riskLevel}`);
   }
 }
-// GET /api/laporan
 router.get("/", async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -88,6 +65,24 @@ router.get("/", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// GET /api/laporan/stats
+router.get("/stats", async (req, res) => {
+  try {
+    const [validasi] = await db.query(
+      `SELECT COUNT(DISTINCT adm4_code) AS wilayah_valid, COUNT(*) AS total_laporan
+       FROM laporan
+       WHERE status = 'valid'
+       AND created_at >= NOW() - INTERVAL 24 HOUR`
+    );
+    res.json({
+      wilayah_risiko_tinggi: validasi[0].wilayah_valid || 0,
+      total_laporan_valid: validasi[0].total_laporan || 0,
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+// GET /api/laporan
 router.get("/validated", async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -105,5 +100,26 @@ router.get("/validated", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// POST /api/laporan
+router.post("/", upload.single("photo"), async (req, res) => {
+  try {
+    const { judul, address, adm4Code, deskripsi, riskLevel } = req.body;
+    const photoUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
+    if (!judul || !adm4Code || !deskripsi || !riskLevel) {
+      return res.status(400).json({ error: "Semua field wajib diisi" });
+    }
+
+    await db.query(
+      "INSERT INTO laporan (judul, adm4_code, address, deskripsi, risk_level, photo_url) VALUES (?, ?, ?, ?, ?, ?)",
+      [judul, adm4Code, address, deskripsi, riskLevel, photoUrl]
+    );
+   // ✅ Cek apakah perlu auto-validasi
+    await checkAndValidate(adm4Code, riskLevel);
+    res.status(201).json({ message: "Laporan berhasil dikirim" });
+  } catch (err) {
+    console.error("❌ Error laporan:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

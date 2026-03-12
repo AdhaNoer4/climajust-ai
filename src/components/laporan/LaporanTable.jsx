@@ -2,19 +2,21 @@ import { useState, useEffect } from "react";
 import RiskBadge from "./RiskBadge";
 import StatusBadge from "./StatusBadge";
 
-export default function LaporanTable() {
+export default function LaporanTable({refreshKey}) {
+  
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+   useEffect(() => {
+    setLoading(true);
     fetch("http://localhost:5000/api/laporan")
       .then(res => res.json())
       .then(data => {
-        setData(data);
+        if (Array.isArray(data)) setData(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [refreshKey]); // ✅ fetch ulang setiap refreshKey berubah
 
   // Format tanggal: "16:10 Selasa"
   function formatWaktu(dateStr) {

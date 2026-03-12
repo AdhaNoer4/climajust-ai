@@ -6,6 +6,7 @@ import Footer from "../components/layout/Footer";
 import BgAwan from "../components/BgAwan";
 
 export default function Laporan() {
+    const [refreshKey, setRefreshKey] = useState(0);
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem("user");
     return saved ? JSON.parse(saved) : null;
@@ -26,9 +27,9 @@ export default function Laporan() {
         }}
       />
       <BgAwan />
-      <div className="max-w-5xl mx-auto bg-white/90 p-5 rounded-2xl px-4 space-y-10">
-        <LaporanForm />
-        <LaporanTable />
+   <div className="max-w-5xl mx-auto bg-white/90 p-5 rounded-2xl px-4 space-y-10">
+        <LaporanForm onSubmitSuccess={() => setRefreshKey(prev => prev + 1)} />
+        <LaporanTable refreshKey={refreshKey} />
       </div>
       <Footer />
     </div>
