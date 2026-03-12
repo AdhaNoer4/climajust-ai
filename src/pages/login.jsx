@@ -1,9 +1,10 @@
 import { NavLink } from "react-router-dom";
+import BgAwan from "../components/BgAwan";
 
 export default function Login() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-300 to-blue-100">
-      
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100">
+       <BgAwan />
       <div className="bg-white/90 backdrop-blur-md p-8 rounded-3xl shadow-xl w-[400px]">
 
         <h1 className="text-3xl font-bold text-center text-gray-800">

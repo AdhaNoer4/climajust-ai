@@ -13,7 +13,7 @@ export default function RiskFilterBar({ weatherData, metadata }) {
         <p className="text-sm text-slate-500">
           Curah hujan: {weatherData?.rain ?? "-"} mm
           {" • "}
-          Suhu: {weatherData?.temperature ?? "-"}°C
+          Suhu: {weatherData?.weather.temp ?? "-"}
         </p>
 
        
@@ -24,7 +24,7 @@ export default function RiskFilterBar({ weatherData, metadata }) {
 
       <div>
         <p className="text-md text-start text-slate-800">
-          Peta Menunjukan Analisis Risiko Cuaca Tingkat Wilayah.
+          Peta menunjukan analisis risiko cuaca tingkat wilayah.
         </p>
       </div>
 

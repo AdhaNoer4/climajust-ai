@@ -122,12 +122,7 @@ export default function RiskMapContainer({ center, weatherData, metadata, userJo
         </div>
       </div>
 
-      {/* Tombol Detail */}
-      <div className="flex justify-center p-4">
-        <button className="bg-sky-500 hover:bg-sky-600 text-white py-2 px-6 rounded-full text-sm font-medium transition-colors">
-          Lihat Detail Peta Risiko
-        </button>
-      </div>
+     
     </div>
   );
 }

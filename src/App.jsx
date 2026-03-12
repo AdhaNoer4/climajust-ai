@@ -3,6 +3,8 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import PetaRisiko from "./pages/PetaRisiko";
 import Laporan from "./pages/Laporan";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState({
@@ -49,6 +51,8 @@ function App() {
       />
 
       <Route path="/laporan" element={<Laporan />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
     </Routes>
   );
 }

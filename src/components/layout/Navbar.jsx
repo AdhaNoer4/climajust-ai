@@ -7,46 +7,45 @@ export default function Navbar({ onSelectCity }) {
   const [searchError, setSearchError] = useState("");
 
   async function handleSearch() {
-  const value = input.trim();
-  if (!value) {
-    setSearchError("Masukkan nama lokasi");
-    return;
-  }
-
-  try {
-    const res = await fetch(`http://localhost:5000/api/locations/search?q=${value}`);
-    const data = await res.json();
-
-    if (data.length === 0) {
-      setSearchError(`Lokasi "${value}" tidak ditemukan`);
+    const value = input.trim();
+    if (!value) {
+      setSearchError("Masukkan nama lokasi");
       return;
     }
 
-    // Ambil hasil pertama
-    onSelectCity(data[0].name);
+    try {
+      const res = await fetch(`http://localhost:5000/api/locations/search?q=${value}`);
+      const data = await res.json();
+
+      if (data.length === 0) {
+        setSearchError(`Lokasi "${value}" tidak ditemukan`);
+        return;
+      }
+
+      // Ambil hasil pertama
+      onSelectCity(data[0].name);
+      setSearchError("");
+      setInput("");
+    } catch (err) {
+      setSearchError("Gagal mencari lokasi");
+    }
+  }
+  const [suggestions, setSuggestions] = useState([]);
+
+  async function handleInputChange(e) {
+    const value = e.target.value;
+    setInput(value);
     setSearchError("");
-    setInput("");
-  } catch (err) {
-    setSearchError("Gagal mencari lokasi");
+
+    if (value.length < 2) {
+      setSuggestions([]);
+      return;
+    }
+
+    const res = await fetch(`http://localhost:5000/api/locations/search?q=${value}`);
+    const data = await res.json();
+    setSuggestions(data);
   }
-}
-const [suggestions, setSuggestions] = useState([]);
-
-async function handleInputChange(e) {
-  const value = e.target.value;
-  setInput(value);
-  setSearchError("");
-
-  if (value.length < 2) {
-    setSuggestions([]);
-    return;
-  }
-
-  const res = await fetch(`http://localhost:5000/api/locations/search?q=${value}`);
-  const data = await res.json();
-  setSuggestions(data);
-}
-  
 
   return (
     <header className="sticky top-0 z-50">
@@ -84,7 +83,7 @@ async function handleInputChange(e) {
             <div className="flex items-center gap-3 relative w-72">
               <input
                 value={input}
-            onChange={handleInputChange}
+                onChange={handleInputChange}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") handleSearch();
                 }}
@@ -93,11 +92,12 @@ async function handleInputChange(e) {
                    focus:outline-none focus:ring-2 focus:ring-sky-400 text-sm ${searchError ? "border-red-500" : ""}`}
               />
               {input && (
-                <button type="button"
+                <button
+                  type="button"
                   onClick={() => {
-  setInput("");
-  setSuggestions([]);
-}}
+                    setInput("");
+                    setSuggestions([]);
+                  }}
                   className="absolute right-8 top-1/2 -translate-y-1/2 
                    text-slate-500 hover:text-sky-600 transition"
                 >
@@ -105,23 +105,24 @@ async function handleInputChange(e) {
                 </button>
               )}
               {suggestions.length > 0 && (
-  <div className="absolute top-10 left-0 w-full bg-white rounded-xl shadow-lg z-50 overflow-hidden">
-    {suggestions.map(loc => (
-      <button
-        key={loc.adm4_code}
-        onClick={() => {
-          onSelectCity(loc.name);
-          setInput("");
-          setSuggestions([]);
-        }}
-        className="w-full text-left px-4 py-2 text-sm hover:bg-sky-50"
-      >
-        {loc.name}
-      </button>
-    ))}
-  </div>
-)}
-              <button type="button"
+                <div className="absolute top-10 left-0 w-full bg-white rounded-xl shadow-lg z-50 overflow-hidden">
+                  {suggestions.map((loc) => (
+                    <button
+                      key={loc.adm4_code}
+                      onClick={() => {
+                        onSelectCity(loc.name);
+                        setInput("");
+                        setSuggestions([]);
+                      }}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-sky-50"
+                    >
+                      {loc.name}
+                    </button>
+                  ))}
+                </div>
+              )}
+              <button
+                type="button"
                 onClick={handleSearch}
                 className="absolute right-2 top-1/2 -translate-y-1/2 
                    text-slate-500 hover:text-sky-600 transition"
@@ -131,10 +132,7 @@ async function handleInputChange(e) {
 
               {searchError && <div className="absolute -bottom-6 left-0 text-xs text-red-500">{searchError}</div>}
             </div>
-             <NavLink
-              to="/login"
-              className="px-4 py-2 rounded-full bg-sky-600 text-white text-sm hover:bg-sky-700"
-            >
+            <NavLink to="/login" className="px-4 py-2 rounded-full bg-sky-600 text-white text-sm hover:bg-sky-700">
               Login
             </NavLink>
           </div>
