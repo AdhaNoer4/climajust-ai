@@ -1,19 +1,17 @@
+import { useMemo } from "react";
 import {
   Bot, CircleCheckBig, Lightbulb,
-  Tractor,
-  Fish,
-  Car,
-  HardHat,
-  Store,
-  Bike,
-  Camera,
+  Tractor, Fish, Car, HardHat, Store, Bike, Camera,
 } from "lucide-react";
-import {jobRecommendations, determineRisk} from "../utils/weatherUtils";
+import { jobRecommendations, determineRisk } from "../utils/weatherUtils";
 
-export default function RecommendationCard({ weatherData, userJob = "petani" }) {
+export default function RecommendationCard({ weatherData, user }) {
+  // ✅ Ambil pekerjaan dari user yang login, fallback ke "petani"
+const userJob = user?.pekerjaan || "petani";
   const formatJob = (job) => {
     return job.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
   };
+
   const jobIcons = {
     petani: <Tractor size={16} />,
     nelayan: <Fish size={16} />,
@@ -23,22 +21,21 @@ export default function RecommendationCard({ weatherData, userJob = "petani" }) 
     ojek_online: <Bike size={16} />,
     fotografer_luar_ruang: <Camera size={16} />,
   };
+
   const riskColors = {
     low: "bg-green-100 text-green-700",
     medium: "bg-yellow-100 text-yellow-700",
     high: "bg-red-100 text-red-700",
   };
-  const weather = weatherData?.weather;
 
+  const weather = weatherData?.weather;
   const risk = determineRisk(weather);
-const firstRecommendation = jobRecommendations[userJob]?.[risk]?.[0] 
-  || "Pantau informasi cuaca secara berkala";
-  const recommendations =
-    jobRecommendations[userJob]?.[risk] || [
-      "Pantau informasi cuaca secara berkala",
-      "Batasi aktivitas luar ruangan jika cuaca memburuk",
-      "Utamakan keselamatan dalam beraktivitas",
-    ];
+
+  const recommendations = jobRecommendations[userJob]?.[risk] || [
+    "Pantau informasi cuaca secara berkala",
+    "Batasi aktivitas luar ruangan jika cuaca memburuk",
+    "Utamakan keselamatan dalam beraktivitas",
+  ];
 
   return (
     <div className="relative bg-white rounded-2xl shadow mt-7 p-4 pt-6 space-y-3">
@@ -63,7 +60,6 @@ const firstRecommendation = jobRecommendations[userJob]?.[risk]?.[0]
           </li>
         ))}
       </ul>
-
       <div className="bg-sky-50 text-sky-700 text-xs rounded-lg p-2">
         <Lightbulb size={14} className="inline mr-1 text-yellow-300" />
         Rekomendasi disesuaikan dengan kondisi cuaca dan jenis pekerjaan Anda.

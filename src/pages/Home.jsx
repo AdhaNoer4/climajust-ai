@@ -11,39 +11,41 @@ import { useLocationSearch } from "../hooks/useLocationSearch"; // ✅ tambahkan
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const fetchPopulationData = async (adm4Code, cityName) => {
+  // 1. Coba dari BPS dulu
   try {
     const response = await fetch(`${API}/bps/penduduk/${adm4Code}?tahun=2023`);
     const data = await response.json();
-    if (!response.ok || !data.total || data.total === 0) {
-      throw new Error("Data tidak tersedia");
+    if (response.ok && data.total && data.total > 0) {
+      return {
+        total: data.total,
+        tahun: data.tahun || 2023,
+        satuan: data.satuan || "Jiwa",
+        sumber: data.sumber || "BPS",
+        label: data.label || "Jumlah Penduduk",
+      };
     }
-    return {
-      total: data.total,
-      tahun: data.tahun || 2023,
-      satuan: data.satuan || "Jiwa",
-      sumber: data.sumber || "BPS",
-      label: data.label || "Jumlah Penduduk",
-    };
-  } catch (error) {
-    const fallback = {
-      "33.72.04.1010": { total: 180000 },
-      "33.72.01": { total: 95000 },
-      "33.72.02": { total: 60000 },
-      "33.72.03": { total: 75000 },
-      "33.72.05": { total: 160000 },
-    };
-    const pop = fallback[adm4Code];
-    return {
-      total: pop?.total || 0,
-      tahun: 2023,
-      sumber: "Estimasi (Data BPS tidak tersedia)",
-      satuan: "Jiwa",
-      label: `Jumlah Penduduk ${cityName}`,
-    };
-  }
+  } catch (_) {}
+
+  // 2. Fallback ke DB
+  try {
+    const response = await fetch(`http://localhost:5000/api/locations/${adm4Code}/populasi`);
+    const data = await response.json();
+    if (response.ok && data.total && data.total > 0) {
+      return data;
+    }
+  } catch (_) {}
+
+  // 3. Tidak ada data sama sekali
+  return {
+    total: 0,
+    tahun: 2023,
+    satuan: "Jiwa",
+    sumber: "Data tidak tersedia",
+    label: `Jumlah Penduduk ${cityName}`,
+  };
 };
 
-export default function Home({ selectedLocation, onSearchLocation }) {
+export default function Home({ selectedLocation, onSearchLocation, user, onLoginSuccess, onLogout }) {
   const [weatherData, setWeatherData] = useState(null);
   const [populationData, setPopulationData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -98,7 +100,12 @@ export default function Home({ selectedLocation, onSearchLocation }) {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-b from-blue-500 to-sky-100">
-        <Navbar onSelectCity={handleCitySelect} />
+       <Navbar
+      onSelectCity={handleCitySelect}
+      user={user}
+      onLoginSuccess={onLoginSuccess}
+      onLogout={onLogout}
+    />
         <main className="max-w-7xl mx-auto px-4 space-y-6">
           <div className="animate-pulse space-y-6">
             <div className="h-64 bg-white/50 rounded-2xl" />
@@ -125,7 +132,12 @@ export default function Home({ selectedLocation, onSearchLocation }) {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100">
-      <Navbar onSelectCity={handleCitySelect} />
+         <Navbar
+      onSelectCity={handleCitySelect}
+      user={user}
+      onLoginSuccess={onLoginSuccess}
+      onLogout={onLogout}
+    />
       <BgAwan />
       <main className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 space-y-6">
         <HeroWeather weatherData={weatherData} cityName={selectedLocation.cityName} />
@@ -142,7 +154,7 @@ export default function Home({ selectedLocation, onSearchLocation }) {
             <CityDetailSidebar weatherData={weatherData} metadata={enrichedMetadata} />
           </div>
           <div className="order-3 lg:order-1 lg:col-span-3">
-            <ImpactSidebar weatherData={weatherData} />
+        <ImpactSidebar weatherData={weatherData} user={user} />
           </div>
         </section>
         <AIChat weatherData={weatherData} cityName={selectedLocation.cityName} />

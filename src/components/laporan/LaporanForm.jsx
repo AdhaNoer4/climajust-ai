@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Upload, CheckCircle } from "lucide-react";
 
-export default function LaporanForm() {
+export default function LaporanForm( {onSubmitSuccess} ) {
   const [locations, setLocations] = useState([]);
   const [form, setForm] = useState({
     judul: "",
@@ -70,6 +70,7 @@ export default function LaporanForm() {
       if (!res.ok) throw new Error("Gagal mengirim laporan");
 
       setSuccess(true);
+      onSubmitSuccess?.();
       setForm({ judul: "", address: "", adm4Code: "", deskripsi: "", riskLevel: "", photo: null });
       setPreview(null);
     } catch (err) {

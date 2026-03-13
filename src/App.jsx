@@ -3,8 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import PetaRisiko from "./pages/PetaRisiko";
 import Laporan from "./pages/Laporan";
-// import Login from "./pages/Login";
-// import Register from "./pages/Register";
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState({
@@ -14,6 +12,11 @@ function App() {
     lng: 110.8216,
   });
 
+  // ✅ State user di dalam App
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem("user");
+    return saved ? JSON.parse(saved) : null;
+  });
   const handleSearchLocation = (locationData) => {
     setSelectedLocation({
       adm4Code: locationData.adm4Code,
@@ -21,40 +24,43 @@ function App() {
       lat: locationData.lat,
       lng: locationData.lng,
     });
+    document.getElementById("hero-weather")?.scrollIntoView({ behavior: "smooth" });
+  };
 
-    // Optional: scroll hanya relevan di Beranda
-    document.getElementById("hero-weather")?.scrollIntoView({
-      behavior: "smooth",
-    });
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <Home
-            selectedLocation={selectedLocation}
-            onSearchLocation={handleSearchLocation}
-          />
-        }
-      />
-
-      <Route
-        path="/peta-risiko"
-        element={
-          <PetaRisiko
-            selectedLocation={selectedLocation}
-            onSearchLocation={handleSearchLocation}
-          />
-        }
-      />
-
-      <Route path="/laporan" element={<Laporan />} />
-      {/* <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} /> */}
-    </Routes>
-  );
+  <Routes>
+    <Route
+      path="/"
+      element={
+        <Home
+          selectedLocation={selectedLocation}
+          onSearchLocation={handleSearchLocation}
+          user={user}
+          onLoginSuccess={setUser}
+          onLogout={handleLogout}
+        />
+      }
+    />
+    <Route
+      path="/peta-risiko"
+      element={
+        <PetaRisiko
+          selectedLocation={selectedLocation}
+          onSearchLocation={handleSearchLocation}
+          user={user}
+          onLoginSuccess={setUser}
+          onLogout={handleLogout}
+        />
+      }
+    />
+    <Route path="/laporan" element={<Laporan />} />
+  </Routes>
+);
 }
 
 export default App;
