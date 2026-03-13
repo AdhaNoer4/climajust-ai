@@ -104,11 +104,11 @@ export default function LoginModal({ isOpen, onClose, openRegister, onLoginSucce
           <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5" />
           Masuk dengan Google
         </button> */}
-        <div className="flex items-center gap-3 my-5">
+        {/* <div className="flex items-center gap-3 my-5">
           <div className="flex-1 h-[1px] bg-gray-200"></div>
           <span className="text-gray-400 text-sm">atau</span>
           <div className="flex-1 h-[1px] bg-gray-200"></div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
