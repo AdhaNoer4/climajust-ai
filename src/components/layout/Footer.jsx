@@ -3,8 +3,15 @@ import twitterIcon from "../../assets/sosmed/x-twitter-brands-solid-full.svg";
 import whatsAppIcon from "../../assets/sosmed/whatsapp-brands-solid-full.svg";
 import instagramIcon from "../../assets/sosmed/instagram-brands-solid-full.svg";
 import tiktokIcon from "../../assets/sosmed/tiktok-brands-solid-full.svg";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
+  const footerLinks = [
+    { name: "Beranda", path: "/" },
+    { name: "Peta Risiko", path: "/peta-risiko" },
+    { name: "Laporan Warga", path: "/laporan" },
+   
+  ];
   return (
     <footer className="relative mt-24 overflow-hidden bg-gradient-to-br from-sky-100 via-blue-100 to-sky-200 pt-20 pb-12 px-6">
       {/* Floating Clouds */}
@@ -22,9 +29,11 @@ export default function Footer() {
             <h3 className="text-xl font-semibold text-slate-800 mb-6">Navigasi</h3>
 
             <ul className="space-y-4 text-slate-700 text-sm">
-              {["Beranda", "Peta Risiko", "Laporan Warga", "Rekomendasi AI", "Tentang ClimaJust AI"].map((item) => (
-                <li key={item} className="hover:text-sky-600 transition cursor-pointer">
-                  {item}
+              {footerLinks.map((item) => (
+                <li key={item.name}>
+                  <Link to={item.path} className="hover:text-sky-600 transition duration-200">
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
