@@ -9,9 +9,10 @@ import AIChat from "../components/home/AIChat";
 import Footer from "../components/layout/Footer";
 import { useLocationSearch } from "../hooks/useLocationSearch"; // ✅ tambahkan
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 const fetchPopulationData = async (adm4Code, cityName) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/bps/penduduk/${adm4Code}?tahun=2023`);
+    const response = await fetch(`${API}/bps/penduduk/${adm4Code}?tahun=2023`);
     const data = await response.json();
     if (!response.ok || !data.total || data.total === 0) {
       throw new Error("Data tidak tersedia");
@@ -51,7 +52,7 @@ export default function Home({ selectedLocation, onSearchLocation }) {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const weatherResponse = await fetch(`http://localhost:5000/api/weather/adm4/${selectedLocation.adm4Code}`);
+      const weatherResponse = await fetch(`${API}/weather/adm4/${selectedLocation.adm4Code}`);
       if (!weatherResponse.ok) throw new Error("Gagal mengambil data cuaca");
       const weather = await weatherResponse.json();
 

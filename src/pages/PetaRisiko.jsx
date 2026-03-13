@@ -9,10 +9,11 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import { useLocationSearch } from "../hooks/useLocationSearch";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 // ✅ Sama persis dengan di Home.jsx
 const fetchPopulationData = async (adm4Code, cityName) => {
   try {
-    const response = await fetch(`http://localhost:5000/api/bps/penduduk/${adm4Code}?tahun=2023`);
+    const response = await fetch(`${API}/bps/penduduk/${adm4Code}?tahun=2023`);
     const data = await response.json();
     if (!response.ok || !data.total || data.total === 0) {
       throw new Error("Data tidak tersedia");
@@ -51,7 +52,7 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5000/api/weather/adm4/${selectedLocation.adm4Code}`);
+        const res = await fetch(`${API}/weather/adm4/${selectedLocation.adm4Code}`);
         if (!res.ok) throw new Error("Gagal fetch cuaca");
         const weather = await res.json();
 
