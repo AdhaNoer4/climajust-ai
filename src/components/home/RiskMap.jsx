@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import L from "leaflet";
 import { jobRecommendations, determineRisk } from "../../utils/weatherUtils";
+import { Link } from "react-router-dom";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -104,7 +105,9 @@ export default function RiskMap({ center, weatherData, metadata, userJob = "nela
         </div>
       </div>
       <div className="flex justify-center mt-2">
-        <button className="w-fit bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded-full text-sm font-medium transition-colors">Lihat Detail Peta Risiko</button>
+        <Link to="/peta-risiko">
+          <button className="w-fit bg-sky-500 hover:bg-sky-600 text-white py-2 px-4 rounded-full text-sm font-medium transition-colors">Lihat Detail Peta Risiko</button>
+        </Link>
       </div>
     </div>
   );

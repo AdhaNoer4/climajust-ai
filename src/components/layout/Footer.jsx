@@ -1,4 +1,4 @@
-import { Cloud, Map, Scale, CheckCircle, Fish, Hammer, Heart, Shield, BarChart3, Brain } from "lucide-react";
+import { Cloud, Map, Scale, CheckCircle, Motorbike, Hammer, Heart, Shield, BarChart3, Brain } from "lucide-react";
 import twitterIcon from "../../assets/sosmed/x-twitter-brands-solid-full.svg";
 import whatsAppIcon from "../../assets/sosmed/whatsapp-brands-solid-full.svg";
 import instagramIcon from "../../assets/sosmed/instagram-brands-solid-full.svg";
@@ -55,7 +55,7 @@ export default function Footer() {
                   <CheckCircle size={18} className="text-green-500" /> Petani Kecil
                 </li>
                 <li className="flex items-center gap-3">
-                  <Fish size={18} className="text-sky-500" /> Nelayan Tradisional
+                  <Motorbike  size={18} className="text-sky-500" /> Ojek Online
                 </li>
                 <li className="flex items-center gap-3">
                   <Hammer size={18} className="text-amber-500" /> Buruh Harian

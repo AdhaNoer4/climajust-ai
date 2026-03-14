@@ -28,7 +28,7 @@ const fetchPopulationData = async (adm4Code, cityName) => {
 
   // 2. Fallback ke DB
   try {
-    const response = await fetch(`http://localhost:5000/api/locations/${adm4Code}/populasi`);
+    const response = await fetch(`${API}/locations/${adm4Code}/populasi`);
     const data = await response.json();
     if (response.ok && data.total && data.total > 0) {
       return data;

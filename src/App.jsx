@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import PetaRisiko from "./pages/PetaRisiko";
 import Laporan from "./pages/Laporan";
+import WeatherDetail from "./pages/WeatherDetail";
 
 function App() {
   const [selectedLocation, setSelectedLocation] = useState({
@@ -59,6 +60,7 @@ function App() {
       }
     />
     <Route path="/laporan" element={<Laporan />} />
+    <Route path="/cuaca-detail" element={<WeatherDetail />} />
   </Routes>
 );
 }

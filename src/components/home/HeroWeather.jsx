@@ -1,7 +1,10 @@
 import { CircleFadingPlus, TriangleAlert, Droplet, Wind, ArrowUp, ArrowDown } from "lucide-react";
 import WeatherIcon from "../home/WeatherIcon";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroWeather({ weatherData, cityName }) {
+  const navigate = useNavigate();
+
   // Format tanggal hari ini secara dinamis
   const today = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
@@ -78,7 +81,12 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
                   {weatherData.weather.description || "Cuaca cerah berawan"}
                   {risk === "tinggi" && ". Waspada untuk aktivitas luar ruangan."}
                 </p>
-                <button className="mt-3 text-sm font-medium text-sky-600 hover:underline">Lihat Detail Cuaca →</button>
+                <button 
+                  onClick={() => navigate("/cuaca-detail")}
+                  className="mt-3 text-sm font-medium text-sky-600 hover:underline"
+                >
+                  Lihat Detail Cuaca →
+                </button>
               </div>
             </div>
           </div>
