@@ -51,25 +51,26 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
       >
         {/* Cloud effects */}
 
-        <div className="relative p-5 sm:p-6 lg:p-8 pb-14 lg:pb-16 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="relative p-5 sm:p-6 lg:p-8 pb-14 lg:pb-16 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
           {/* LEFT */}
           <div className="space-y-4">
             <div className="text-sm opacity-90 flex items-center gap-2">
               <CircleFadingPlus size={20} />
               Status Cuaca Hari Ini
             </div>
-            <h1 className="text-md lg:text-3xl font-bold">{cityName}</h1>
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold">{cityName}</h1>
             <p className="text-sm opacity-90">{today}</p>
 
             <div className="relative mt-6">
               <div
                 className="
-                  absolute
-                  left-0
-                  top-full
-                  bg-white text-slate-800
+                 relative md:absolute
+                  md:left-0
+                  md:top-full
+                  mt-6 md:mt-0
+                  bg-white/90 backdrop-blur text-slate-800
                   rounded-xl p-4 sm:p-5
-                  max-w-full sm:max-w-md lg:max-w-lg
+                  w-full md:max-w-md lg:max-w-lg
                   shadow-sm
                   transition hover:-translate-y-1 hover:shadow-3xl
                             "
@@ -81,10 +82,7 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
                   {weatherData.weather.description || "Cuaca cerah berawan"}
                   {risk === "tinggi" && ". Waspada untuk aktivitas luar ruangan."}
                 </p>
-                <button 
-                  onClick={() => navigate("/cuaca-detail")}
-                  className="mt-3 text-sm font-medium text-sky-600 hover:underline"
-                >
+                <button onClick={() => navigate("/cuaca-detail")} className="mt-3 text-sm font-medium text-sky-600 hover:underline">
                   Lihat Detail Cuaca →
                 </button>
               </div>
@@ -92,12 +90,12 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
           </div>
 
           {/* RIGHT - Menggunakan ikon dari BMKG */}
-          <div className="flex items-center justify-end float-end md:justify-end md:pr-10 gap-6">
+          <div className="flex flex-col md:flex-row items-center md:items-end md:justify-end gap-4 md:gap-6 md:pr-10">
             {/* Ikon dari BMKG */}
-            <WeatherIcon description={weatherData.weather.description_en} className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 object-contain animate-float" />
-            <div className="text-right">
-              <div className="text-4xl sm:text-5xl font-bold">{weatherData.weather.temp}</div>
-              <div className="flex justify-end gap-3 text-sm opacity-90">
+            <WeatherIcon description={weatherData.weather.description_en} className="w-20 h-20 sm:w-24 sm:h-24 lg:w-28 lg:h-28 object-contain animate-float" />
+            <div className="text-center md:text-right">
+              <div className="text-4xl sm:text-5xl lg:text-6xl font-bold">{weatherData.weather.temp}</div>
+              <div className="flex justify-center md:justify-end gap-3 text-sm opacity-90">
                 <span className="flex items-center gap-1">
                   <ArrowUp size={14} />
                   {weatherData.weather.temp_max || "?"}°
@@ -107,11 +105,11 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
                 </span>
               </div>
               <div className="mt-3 space-y-2 text-sm opacity-90">
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex items-center justify-center md:justify-end gap-2">
                   <Droplet size={16} />
                   {weatherData.weather.humidity}%
                 </div>
-                <div className="flex items-center justify-end gap-2">
+                <div className="flex items-center justify-center md:justify-end gap-2">
                   <Wind size={16} />
                   {weatherData.weather.wind || "0"} km/h
                 </div>

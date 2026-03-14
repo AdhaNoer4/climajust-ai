@@ -17,6 +17,7 @@ export default function AIChat({ weatherData, cityName }) {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [speakingIndex, setSpeakingIndex] = useState(null);
   const firstLoadRef = useRef(true);
+  const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
   const suggestions = [`Apakah hari ini akan hujan di ${cityName}?`, `Berapa suhu maksimum hari ini di ${cityName}?`, `Apakah ada risiko cuaca ekstrem hari ini?`];
 
@@ -61,7 +62,7 @@ export default function AIChat({ weatherData, cityName }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const res = await fetch(`${API}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -142,7 +143,7 @@ export default function AIChat({ weatherData, cityName }) {
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5000/api/chat", {
+      const res = await fetch(`${API}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

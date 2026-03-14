@@ -94,7 +94,7 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation, user, o
   };
 
  return (
-  <div className="relative min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 overflow-hidden">
+  <div className="relative min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100">
 
     {/* Background Awan */}
     <div className="absolute inset-0 z-0 pointer-events-none">
@@ -110,17 +110,17 @@ export default function PetaRisiko({ selectedLocation, onSearchLocation, user, o
       onLogout={onLogout}
     />
 
-      <main className="max-w-7xl mx-auto px-4 space-y-6">
+      <main className="max-w-7xl mx-auto px-4 py-4 md:py-6 space-y-6">
         <RiskFilterBar weatherData={weatherData} metadata={metadata} />
 
-        <div className="grid grid-cols-12 gap-6">
-          <div className="col-span-3">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <div className="lg:col-span-3 order-2 lg:order-1">
             <RiskStatsSidebar weatherData={weatherData} />
           </div>
 
-          <div className="col-span-9">
+          <div className="lg:col-span-9 order-1 lg:order-2">
             {loading ? (
-              <div className="h-[500px] rounded-2xl bg-white/50 animate-pulse" />
+              <div className="h-[350px] md:h-[450px] lg:h-[500px] rounded-2xl bg-white/50 animate-pulse" />
             ) : (
               <RiskMapContainer
                 center={center}
