@@ -1,4 +1,4 @@
-import { Cloud, Map, Scale, CheckCircle, Motorbike, Hammer, Heart, Shield, BarChart3, Brain } from "lucide-react";
+import { Cloud, Map, Scale, CheckCircle, Motorbike, Hammer, Heart, Shield, BarChart3, Brain, Users } from "lucide-react";
 import twitterIcon from "../../assets/sosmed/x-twitter-brands-solid-full.svg";
 import whatsAppIcon from "../../assets/sosmed/whatsapp-brands-solid-full.svg";
 import instagramIcon from "../../assets/sosmed/instagram-brands-solid-full.svg";
@@ -10,7 +10,7 @@ export default function Footer() {
     { name: "Beranda", path: "/" },
     { name: "Peta Risiko", path: "/peta-risiko" },
     { name: "Laporan Warga", path: "/laporan" },
-   
+
   ];
   return (
     <footer className="relative mt-24 overflow-hidden bg-gradient-to-br from-sky-100 via-blue-100 to-sky-200 pt-20 pb-12 px-6">
@@ -55,7 +55,7 @@ export default function Footer() {
                   <CheckCircle size={18} className="text-green-500" /> Petani Kecil
                 </li>
                 <li className="flex items-center gap-3">
-                  <Motorbike  size={18} className="text-sky-500" /> Ojek Online
+                  <Motorbike size={18} className="text-sky-500" /> Ojek Online
                 </li>
                 <li className="flex items-center gap-3">
                   <Hammer size={18} className="text-amber-500" /> Buruh Harian
@@ -68,13 +68,18 @@ export default function Footer() {
 
             <div className="bg-white/50 backdrop-blur-xl border border-white/40 rounded-3xl p-8 shadow-lg">
               <h3 className="text-xl font-semibold text-slate-800 mb-6">Sumber Data</h3>
-
               <ul className="space-y-4 text-sm text-slate-700">
                 <li className="flex items-center gap-3">
-                  <Cloud size={18} /> Data cuaca & iklim
+                  <Cloud size={18} />
+                  <span>Data cuaca & iklim — <span className="font-semibold text-sky-600">BMKG</span></span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <BarChart3 size={18} /> Laporan masyarakat
+                  <BarChart3 size={18} />
+                  <span>Data kependudukan — <span className="font-semibold text-sky-600">BPS</span></span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Users size={18} />
+                  <span>Laporan masyarakat — <span className="font-semibold text-sky-600">Komunitas</span></span>
                 </li>
               </ul>
             </div>

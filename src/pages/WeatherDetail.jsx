@@ -96,20 +96,30 @@ export default function WeatherDetail({ selectedLocation, onSearchLocation, user
     (cityName) => alert(`Kota "${cityName}" tidak ditemukan`),
   );
 
-  if (loading) {
-    return (
-      <section className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 pb-10">
-        <Navbar onSelectCity={handleCitySelect} user={user} onLoginSuccess={onLoginSuccess} onLogout={onLogout} />
-        <WeatherHero weatherData={weatherData} cityName={selectedLocation?.cityName} />
+// ✅ Kedua return pakai weatherData yang sama
+if (loading) {
+  return (
+    <section className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 pb-10">
+      <Navbar onSelectCity={handleCitySelect} user={user} onLoginSuccess={onLoginSuccess} onLogout={onLogout} />
+      <WeatherHero weatherData={weatherData} cityName={selectedLocation?.cityName} />
+      <div className="max-w-6xl mx-auto px-4 -mt-10 space-y-6">
+        <WeatherStats weatherData={weatherData} cityName={selectedLocation?.cityName} />
+        <TemperatureChart weatherData={weatherData} cityName={selectedLocation?.cityName} />
+        <HourlyForecast weatherData={weatherData} /> {/* ✅ tambahkan weatherData */}
+      </div>
+    </section>
+  );
+}
 
-        <div className="max-w-6xl mx-auto px-4 -mt-10 space-y-6">
-          <WeatherStats weatherData={weatherData} cityName={selectedLocation?.cityName} />
-
-          <TemperatureChart weatherData={weatherData} cityName={selectedLocation?.cityName} />
-
-          <HourlyForecast />
-        </div>
-      </section>
-    );
-  }
+return (
+  <section className="min-h-screen bg-gradient-to-b from-blue-400 via-sky-200 to-sky-100 pb-10">
+    <Navbar onSelectCity={handleCitySelect} user={user} onLoginSuccess={onLoginSuccess} onLogout={onLogout} />
+    <WeatherHero weatherData={weatherData} cityName={selectedLocation?.cityName} />
+    <div className="max-w-6xl mx-auto px-4 -mt-10 space-y-6">
+      <WeatherStats weatherData={weatherData} cityName={selectedLocation?.cityName} />
+      <TemperatureChart weatherData={weatherData} cityName={selectedLocation?.cityName} />
+      <HourlyForecast weatherData={weatherData} />
+    </div>
+  </section>
+);
 }

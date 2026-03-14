@@ -4,7 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function HeroWeather({ weatherData, cityName }) {
   const navigate = useNavigate();
-
+  const formatWind = (wind) => {
+    if (!wind) return "--";
+    return wind.toString().replace("km/jam", "km/h");
+  };
   // Format tanggal hari ini secara dinamis
   const today = new Date().toLocaleDateString("id-ID", {
     weekday: "long",
@@ -27,7 +30,10 @@ export default function HeroWeather({ weatherData, cityName }) {
   };
 
   const risk = determineRisk(weatherData?.weather);
-
+  const todayForecast = weatherData?.forecast?.slice(0, 8) || [];
+  const temps = todayForecast.map(f => parseFloat(f.temp)).filter(Boolean);
+  const maxTemp = temps.length ? Math.max(...temps) : null;
+  const minTemp = temps.length ? Math.min(...temps) : null;
   // Skeleton / Loading state
   if (!weatherData) {
     return (
@@ -98,10 +104,10 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
               <div className="flex justify-center md:justify-end gap-3 text-sm opacity-90">
                 <span className="flex items-center gap-1">
                   <ArrowUp size={14} />
-                  {weatherData.weather.temp_max || "?"}°
+                  {maxTemp ? `${maxTemp}°` : "--"}
                 </span>
                 <span className="flex items-center gap-1">
-                  <ArrowDown size={14} /> {weatherData.weather.temp_min || "?"}°
+                  <ArrowDown size={14} /> {minTemp ? `${minTemp}°` : "--"}
                 </span>
               </div>
               <div className="mt-3 space-y-2 text-sm opacity-90">
@@ -111,7 +117,7 @@ ${isRain ? "from-slate-600 via-slate-700 to-slate-800" : "from-sky-400 via-sky-5
                 </div>
                 <div className="flex items-center justify-center md:justify-end gap-2">
                   <Wind size={16} />
-                  {weatherData.weather.wind || "0"} km/h
+                  {formatWind(weatherData.weather.wind)}
                 </div>
               </div>
             </div>

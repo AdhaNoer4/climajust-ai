@@ -60,7 +60,15 @@ function App() {
       }
     />
     <Route path="/laporan" element={<Laporan />} />
-    <Route path="/cuaca-detail" element={<WeatherDetail />} />
+    <Route path="/cuaca-detail" element={
+  <WeatherDetail
+    selectedLocation={selectedLocation}
+    onSearchLocation={handleSearchLocation}
+    user={user}
+    onLoginSuccess={(userData) => setUser(userData)}
+    onLogout={handleLogout}
+  />
+} />
   </Routes>
 );
 }
