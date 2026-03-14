@@ -7,8 +7,11 @@ export default function RiskTable() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/laporan/validated")
+useEffect(() => {
+    // Ambil base URL dari env, jika tidak ada baru fallback ke localhost
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+    fetch(`${apiUrl}/laporan/validated`)
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -18,12 +21,12 @@ export default function RiskTable() {
         }
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Error fetching validated reports:", err);
         setData([]);
         setLoading(false);
       });
   }, []);
-
   return (
     <div className="bg-white rounded-2xl shadow p-6">
       <h3 className="text-lg font-semibold mb-4">Daftar Wilayah Risiko Tervalidasi</h3>

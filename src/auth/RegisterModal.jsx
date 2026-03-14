@@ -28,8 +28,11 @@ export default function RegisterModal({ isOpen, onClose, openLogin }) {
     setLoading(true);
     setError("");
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+try {
+      // Sama seperti login, panggil variabel env-nya
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+      const res = await fetch(`${apiUrl}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),

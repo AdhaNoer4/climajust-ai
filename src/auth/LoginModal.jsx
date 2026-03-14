@@ -21,8 +21,11 @@ export default function LoginModal({ isOpen, onClose, openRegister, onLoginSucce
     setLoading(true);
     setError("");
 
-    try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+try {
+      // Gunakan variabel env agar bisa mendeteksi Railway secara otomatis
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+      const res = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -36,7 +39,7 @@ export default function LoginModal({ isOpen, onClose, openRegister, onLoginSucce
 
       onLoginSuccess(data.user); // kirim data user ke parent
       onClose();
-    } catch (err) {
+    }catch (err) {
       setError(err.message);
     } finally {
       setLoading(false);

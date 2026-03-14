@@ -9,7 +9,7 @@ import Footer from "../components/layout/Footer";
 import { useLocationSearch } from "../hooks/useLocationSearch";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
-// ✅ Sama persis dengan di Home.jsx
+
 const fetchPopulationData = async (adm4Code, cityName) => {
   // 1. Coba dari BPS dulu
   try {
@@ -26,9 +26,10 @@ const fetchPopulationData = async (adm4Code, cityName) => {
     }
   } catch (_) {}
 
-  // 2. Fallback ke DB
+  // 2. Fallback ke DB ✅ SEKARANG SUDAH AMAN
   try {
-    const response = await fetch(`http://localhost:5000/api/locations/${adm4Code}/populasi`);
+    // Gunakan `${API}` bukan "http://localhost:5000/api"
+    const response = await fetch(`${API}/locations/${adm4Code}/populasi`);
     const data = await response.json();
     if (response.ok && data.total && data.total > 0) {
       return data;

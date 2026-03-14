@@ -7,16 +7,19 @@ export default function LaporanTable({refreshKey}) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
 
-   useEffect(() => {
+useEffect(() => {
     setLoading(true);
-    fetch("http://localhost:5000/api/laporan")
+    // Gunakan variabel env
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+    
+    fetch(`${apiUrl}/laporan`)
       .then(res => res.json())
       .then(data => {
         if (Array.isArray(data)) setData(data);
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [refreshKey]); // ✅ fetch ulang setiap refreshKey berubah
+  }, [refreshKey]);
 
   // Format tanggal: "16:10 Selasa"
   function formatWaktu(dateStr) {

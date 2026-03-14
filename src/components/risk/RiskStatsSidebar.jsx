@@ -13,13 +13,16 @@ export default function RiskStatsSidebar({ weatherData }) {
     total_laporan_valid: 0,
   });
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/laporan/stats")
+useEffect(() => {
+    // Gunakan import.meta.env.VITE_API_URL
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+    
+    fetch(`${apiUrl}/laporan/stats`)
       .then(res => res.json())
       .then(data => {
         if (data && !data.error) setStats(data);
       })
-      .catch(() => {});
+      .catch((err) => console.error("Error fetching stats:", err));
   }, []);
 
   return (

@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { Upload, CheckCircle } from "lucide-react";
 
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
 export default function LaporanForm( {onSubmitSuccess} ) {
   const [locations, setLocations] = useState([]);
   const [form, setForm] = useState({
@@ -16,8 +18,10 @@ export default function LaporanForm( {onSubmitSuccess} ) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    fetch("http://localhost:5000/api/locations")
+useEffect(() => {
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+    
+    fetch(`${apiUrl}/locations`)
       .then(res => res.json())
       .then(data => setLocations(data))
       .catch(() => setError("Gagal memuat data wilayah"));
@@ -62,10 +66,10 @@ export default function LaporanForm( {onSubmitSuccess} ) {
       formData.append("riskLevel", form.riskLevel);
       if (form.photo) formData.append("photo", form.photo);
 
-      const res = await fetch("http://localhost:5000/api/laporan", {
-        method: "POST",
-        body: formData,
-      });
+    const res = await fetch(`${API}/laporan`, {
+    method: "POST",
+    body: formData, // Pastikan tidak ada headers "Content-Type" manual jika menggunakan formData
+  });
 
       if (!res.ok) throw new Error("Gagal mengirim laporan");
 
