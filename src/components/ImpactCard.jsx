@@ -33,9 +33,7 @@ export default function ImpactCard({ weatherData }) {
         ))}
       </ul>
 
-      <button className="text-xs text-sky-600 hover:underline">
-        Dampak lainnya →
-      </button>
+     
     </div>
   );
 }
