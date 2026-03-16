@@ -42,26 +42,44 @@ Kami menggunakan data dari institusi resmi untuk menjamin kredibilitas informasi
 ## 🚀 Instalasi Lokal
 
 ### 1. Clone & Setup
-```bash
-git clone [https://github.com/AdhaNoer4/climajust-ai.git](https://github.com/AdhaNoer4/climajust-ai.git)
-cd climajust-ai
+    ```bash
+    git clone [https://github.com/AdhaNoer4/climajust-ai.git](https://github.com/AdhaNoer4/climajust-ai.git)
+    cd climajust-ai
 
-2. Jalankan Backend ⚙️
-Bash
+### 2. Jalankan Backend ⚙️
+    ```bash
+    cd climajust-backend
+    npm install
+    npm run dev
+    
+Berjalan di: http://localhost:5000
 
-cd backend
-npm install
-npm run dev
+### 3. Buat file .env di dalam folder backend dengan isi berikut (sesuaikan nilai sesuai kebutuhan):
+    ```bash
+    DB_HOST=localhost
+    DB_USER=root
+    DB_PASSWORD=          # password MySQL kamu
+    DB_NAME=climajust_db
+    DB_PORT=3306
+    JWT_SECRET=supersecretkeypanjangminimal32karakter
+    GEMINI_API_KEY=your-google-gemini-api-key
+    BPS_API_KEY=your-bps-api-key-if-any
+    PORT=5000
 
-    Berjalan di: http://localhost:5000
-3. Jalankan Frontend 🎨
-Bash
+### 4. Buat Database
+    ```bash
+    Buat database kosong bernama climajust_db
+    import database climajust_db.sql ke dalamnya
 
-cd ../frontend
-npm install
-npm run dev
+### 5. Jalankan Frontend 🎨
+    ```bash
+    cd climajust-ai
+    npm install
+    npm run dev
 
-    Berjalan di: http://localhost:5173
+Berjalan di: http://localhost:5173
+
+Buka browser di alamat tersebut untuk melihat tampilan.
 
 👥 Tim Pengembang
 
