@@ -1,16 +1,93 @@
-# React + Vite
+🌦️ ClimaJust.ai
+AI-Powered Weather Insights & Actionable Recommendations
+📖 Deskripsi Proyek
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ClimaJust.ai bukan sekadar aplikasi prakiraan cuaca biasa. Platform ini dirancang khusus untuk membantu masyarakat—terutama pekerja lapangan seperti petani, kuli bangunan, dan pengemudi—dalam mengambil keputusan tepat berdasarkan kondisi alam.
 
-Currently, two official plugins are available:
+Dengan integrasi Artificial Intelligence, ClimaJust.ai menganalisis data cuaca mentah menjadi instruksi tindakan nyata yang kontekstual, memastikan produktivitas tetap terjaga dan keselamatan selalu utama.
+✨ Fitur Utama
+Fitur	Deskripsi
+🔮 AI Weather Prediction	Prediksi cuaca akurat untuk wilayah spesifik pilihan Anda.
+🧠 Actionable Insights	Rekomendasi tindakan otomatis dari AI berdasarkan profesi pengguna.
+📢 Community Report	Pengguna dapat melaporkan kondisi cuaca real-time di lokasi mereka.
+✅ AI Validation	Setiap laporan publik divalidasi oleh AI untuk menjaga akurasi informasi.
+📊 Smart Visualization	Visualisasi data yang intuitif dan mudah dipahami oleh siapa saja.
+🛠️ Tech Stack
+Bagian	Teknologi
+Frontend	React.js, Vite, Lucide React, Tailwind CSS
+Backend	Node.js, Express, Multer, JWT, Bcrypt
+Database	(Sesuai konfigurasi backend)
+AI Engine	Weather Data Analysis & Validation System
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+📊 Sumber Data (Data Sources)
 
-## React Compiler
+Proyek ini mengintegrasikan data dari penyedia layanan data resmi untuk memastikan akurasi informasi:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+    BMKG (Badan Meteorologi, Klimatologi, dan Geofisika): Digunakan sebagai sumber utama data prakiraan cuaca, suhu, kelembapan, dan kondisi atmosfer secara real-time.
 
-## Expanding the ESLint configuration
+    BPS (Badan Pusat Statistik): Digunakan untuk pengolahan data kontekstual wilayah dan demografi guna mendukung akurasi rekomendasi berbasis lokasi.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+🚀 Panduan Instalasi
+
+Ikuti langkah-langkah berikut untuk menjalankan ClimaJust.ai di lingkungan lokal Anda:
+1. Persiapan Awal
+Bash
+
+# Clone repository
+git clone https://github.com/AdhaNoer4/climajust-ai.git
+
+# Masuk ke folder
+cd climajust-ai
+
+2. Konfigurasi Backend ⚙️
+Bash
+
+cd backend
+npm install
+npm install multer bcrypt jsonwebtoken
+npm run dev
+
+    🌐 Backend akan berjalan di: http://localhost:5000
+
+3. Konfigurasi Frontend 🎨
+Bash
+
+cd ../frontend
+npm install
+npm install lucide-react
+npm run dev
+
+    🌐 Frontend akan berjalan di: http://localhost:5173
+
+💡 Cara Penggunaan
+🔓 Tanpa Login
+
+    Akses ClimaJust.ai.
+
+    Pilih lokasi target.
+
+    Lihat prediksi cuaca dan rekomendasi umum dari AI.
+
+🔐 Dengan Login (Fitur Personalisasi)
+
+    Registrasi: Masukkan Nama, Email, dan Pekerjaan Spesifik Anda.
+
+    Dashboard: Sistem akan memberikan rekomendasi yang dipersonalisasi sesuai jenis pekerjaan Anda terhadap cuaca saat ini.
+
+    Kontribusi: Kirim laporan cuaca terkini untuk membantu validasi data di wilayah Anda.
+
+👥 Tim Pengembang
+
+Proyek ini dikembangkan oleh mahasiswa berdedikasi dari Universitas Surakarta untuk tujuan kompetisi dan edukasi:
+
+    Fahrudin Ahmad Habibie
+
+    Adha Noer Hidayahtulloh
+
+    David Dwi Saputra
+
+📄 Lisensi
+
+Dikembangkan untuk keperluan Edukasi & Kompetisi. Mohon cantumkan kredit kepada pengembang asli jika ingin menggunakan kode sumber ini.
+
+Built with ❤️ by Team ClimaJust.ai
