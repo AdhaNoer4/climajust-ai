@@ -1,84 +1,71 @@
-🌦️ ClimaJust.ai
-AI-Powered Weather Insights & Actionable Recommendations
-📖 Deskripsi Proyek
+# 🌦️ ClimaJust.ai
+### *AI-Powered Weather Insights & Actionable Recommendations*
 
-ClimaJust.ai bukan sekadar aplikasi prakiraan cuaca biasa. Platform ini dirancang khusus untuk membantu masyarakat—terutama pekerja lapangan seperti petani, kuli bangunan, dan pengemudi—dalam mengambil keputusan tepat berdasarkan kondisi alam.
+[![Status](https://img.shields.io/badge/Status-Development-orange)](#) 
+[![License](https://img.shields.io/badge/License-Educational-blue)](#)
+[![Tech](https://img.shields.io/badge/Powered%20By-Artificial%20Intelligence-green)](#)
 
-Dengan integrasi Artificial Intelligence, ClimaJust.ai menganalisis data cuaca mentah menjadi instruksi tindakan nyata yang kontekstual, memastikan produktivitas tetap terjaga dan keselamatan selalu utama.
-✨ Fitur Utama
-Fitur	Deskripsi
-🔮 AI Weather Prediction	Prediksi cuaca akurat untuk wilayah spesifik pilihan Anda.
-🧠 Actionable Insights	Rekomendasi tindakan otomatis dari AI berdasarkan profesi pengguna.
-📢 Community Report	Pengguna dapat melaporkan kondisi cuaca real-time di lokasi mereka.
-✅ AI Validation	Setiap laporan publik divalidasi oleh AI untuk menjaga akurasi informasi.
-📊 Smart Visualization	Visualisasi data yang intuitif dan mudah dipahami oleh siapa saja.
-🛠️ Tech Stack
-Bagian	Teknologi
-Frontend	React.js, Vite, Lucide React, Tailwind CSS
-Backend	Node.js, Express, Multer, JWT, Bcrypt
-Database	(Sesuai konfigurasi backend)
-AI Engine	Weather Data Analysis & Validation System
+---
 
-📊 Sumber Data (Data Sources)
+## 📖 Deskripsi Proyek
+**ClimaJust.ai** adalah platform berbasis web yang dirancang untuk menyediakan prediksi cuaca cerdas serta rekomendasi tindakan nyata bagi masyarakat. Berbeda dengan aplikasi cuaca biasa, sistem kami berfokus pada bagaimana cuaca memengaruhi aktivitas sektor pekerjaan spesifik seperti **pekerja konstruksi, petani, pengemudi**, dan tenaga lapangan lainnya.
 
-Proyek ini mengintegrasikan data dari penyedia layanan data resmi untuk memastikan akurasi informasi:
+Dengan integrasi **Artificial Intelligence**, ClimaJust.ai menganalisis data cuaca untuk memberikan panduan keselamatan dan efisiensi kerja yang kontekstual.
 
-    BMKG (Badan Meteorologi, Klimatologi, dan Geofisika): Digunakan sebagai sumber utama data prakiraan cuaca, suhu, kelembapan, dan kondisi atmosfer secara real-time.
+---
 
-    BPS (Badan Pusat Statistik): Digunakan untuk pengolahan data kontekstual wilayah dan demografi guna mendukung akurasi rekomendasi berbasis lokasi.
+## ✨ Fitur Utama
 
-🚀 Panduan Instalasi
+| Fitur | Deskripsi |
+| :--- | :--- |
+| 🔮 **Prediksi Cuaca** | Informasi cuaca akurat pada wilayah tertentu secara real-time. |
+| 🧠 **Rekomendasi Berbasis AI** | Analisis tindakan otomatis sesuai dengan jenis pekerjaan atau aktivitas pengguna. |
+| 📢 **Laporan Masyarakat** | Fitur bagi pengguna untuk melaporkan kondisi cuaca langsung dari lokasi mereka. |
+| ✅ **Validasi AI** | Setiap laporan warga divalidasi oleh sistem AI untuk menjamin akurasi data. |
+| 📊 **Visualisasi Info** | Penyajian data cuaca dalam bentuk visual yang intuitif dan mudah dipahami. |
 
-Ikuti langkah-langkah berikut untuk menjalankan ClimaJust.ai di lingkungan lokal Anda:
-1. Persiapan Awal
-Bash
+---
 
-# Clone repository
-git clone https://github.com/AdhaNoer4/climajust-ai.git
+## 📊 Sumber Data (Data Sources)
+Kami menggunakan data dari institusi resmi untuk menjamin kredibilitas informasi:
+* **BMKG (Badan Meteorologi, Klimatologi, dan Geofisika)**: Sumber utama data prakiraan cuaca dan kondisi atmosfer.
+* **BPS (Badan Pusat Statistik)**: Data referensi kewilayahan untuk akurasi lokasi.
 
-# Masuk ke folder
+---
+
+## 🛠️ Tech Stack
+* **Frontend**: React.js, Vite, Tailwind CSS, Lucide React.
+* **Backend**: Node.js, Express, Multer, JWT, Bcrypt.
+
+---
+
+## 🚀 Instalasi Lokal
+
+### 1. Clone & Setup
+```bash
+git clone [https://github.com/AdhaNoer4/climajust-ai.git](https://github.com/AdhaNoer4/climajust-ai.git)
 cd climajust-ai
 
-2. Konfigurasi Backend ⚙️
+2. Jalankan Backend ⚙️
 Bash
 
 cd backend
 npm install
-npm install multer bcrypt jsonwebtoken
 npm run dev
 
-    🌐 Backend akan berjalan di: http://localhost:5000
-
-3. Konfigurasi Frontend 🎨
+    Berjalan di: http://localhost:5000
+3. Jalankan Frontend 🎨
 Bash
 
 cd ../frontend
 npm install
-npm install lucide-react
 npm run dev
 
-    🌐 Frontend akan berjalan di: http://localhost:5173
-
-💡 Cara Penggunaan
-🔓 Tanpa Login
-
-    Akses ClimaJust.ai.
-
-    Pilih lokasi target.
-
-    Lihat prediksi cuaca dan rekomendasi umum dari AI.
-
-🔐 Dengan Login (Fitur Personalisasi)
-
-    Registrasi: Masukkan Nama, Email, dan Pekerjaan Spesifik Anda.
-
-    Dashboard: Sistem akan memberikan rekomendasi yang dipersonalisasi sesuai jenis pekerjaan Anda terhadap cuaca saat ini.
-
-    Kontribusi: Kirim laporan cuaca terkini untuk membantu validasi data di wilayah Anda.
+    Berjalan di: http://localhost:5173
 
 👥 Tim Pengembang
 
-Proyek ini dikembangkan oleh mahasiswa berdedikasi dari Universitas Surakarta untuk tujuan kompetisi dan edukasi:
+Proyek ini dikembangkan oleh mahasiswa Universitas Surakarta untuk tujuan kompetisi:
 
     Fahrudin Ahmad Habibie
 
@@ -88,6 +75,6 @@ Proyek ini dikembangkan oleh mahasiswa berdedikasi dari Universitas Surakarta un
 
 📄 Lisensi
 
-Dikembangkan untuk keperluan Edukasi & Kompetisi. Mohon cantumkan kredit kepada pengembang asli jika ingin menggunakan kode sumber ini.
+Seluruh kode sumber dapat digunakan untuk keperluan pembelajaran dengan tetap mencantumkan kredit kepada pengembang asli.
 
 Built with ❤️ by Team ClimaJust.ai
